@@ -1,0 +1,51 @@
+erase
+
+data cl_low.dat
+lines 4 402
+read llow 1
+read cllow 2
+
+data cl_high.dat
+lines 4 1502
+read lhig 1
+read clhig 2
+
+data cl_combine.dat
+read lcom 1
+read clcom 2
+
+data cl.lcdm_tau
+lines 1 1351
+read lfull 1
+read clfull 2
+
+set llow=lg(llow)
+set lhig=lg(lhig)
+set lcom=lg(lcom)
+set lfull=lg(lfull)
+
+set rel=(clfull-clcom)/clfull
+
+device postfile plot_ksplit.ps
+lweight 4
+window 1 2 1 2
+ctype black
+ltype 0
+limits 0 3.5 clhig
+box
+
+connect llow cllow
+ctype blue
+connect lhig clhig
+ctype red
+connect lcom clcom
+ctype green
+connect lfull clfull
+
+window 1 2 1 1
+ctype black
+ltype 0
+limits 0 3.5 rel
+box
+
+connect lfull rel

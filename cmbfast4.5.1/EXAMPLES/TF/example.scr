@@ -1,0 +1,78 @@
+#!/bin/csh
+### 
+### This script illustrates tf normalization
+###
+
+##
+## Directory with CODE
+
+set THISDIR=`pwd`
+set CODEDIR = $THISDIR/../..
+
+initialize:
+
+##
+## Bessel function files should have been created before running this  
+## script. 
+##
+
+set JLFILE = $CODEDIR/jl.dat
+set UJLFILE = $CODEDIR/ujl.dat
+
+
+ln -s $JLFILE .
+ln -s $UJLFILE .
+
+#gotos
+#goto normalized
+
+unnormalized:
+
+### 
+### Unnormalized run 
+###
+cd $CODEDIR
+make tidy
+configure --with-cobe=no
+make 
+cd $THISDIR
+ 
+# Example 1, tf alone
+
+$CODEDIR/cmb < lcdm_tfalone.in
+mv lcdm_matter.dat lcdm_matter_tfalone.dat
+
+# Example 2, tf and cmb
+
+$CODEDIR/cmb < lcdm_tfcmb.in
+mv lcdm_matter.dat lcdm_matter_tfcmb.dat
+mv cl.lcdm cl.lcdm_unnorm
+
+
+normalized:
+### 
+### Normalized run 
+###
+
+cd $CODEDIR
+make tidy
+configure --with-cobe=yes
+make 
+cd $THISDIR
+
+$CODEDIR/cmb < lcdm_tfcmb.in > tfcmb_norm.log
+mv lcdm_matter.dat lcdm_matter_tfcmb_norm.dat
+mv cl.lcdm cl.lcdm_norm
+
+## Relevant information in the log file:
+## sigma8=   0.89061483090733 4pik^3P(k) norm:  2.2357586364574D-09
+
+sm < plots_tf.sm
+
+rm -f jl.dat
+rm -f ujl.dat
+
+
+
+
+

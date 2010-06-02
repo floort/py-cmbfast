@@ -1,0 +1,20 @@
+We are including subroutines that output results in fits format
+ready for use by the HEALPIX package to generate maps. 
+
+In order to use these routines you need to have the fits libaries
+installed in your machine and compile cmbfast 
+with the FITS option. To do this you can type 
+configure --with-fits=yes
+make
+or you could add -DFITS to your manual  compilation lines, eg.
+f77 -c -DFITS driver.F. In the latter case
+you will then have to add the library options to the 
+cmb compilation. See the Makefile for details. 
+
+You should also make sure that the FITSDIR variable in Makefile
+points to the location of the fits library files. 
+
+WARNING: the code will give an error if the file selected for
+the fits output already exists.
+
+

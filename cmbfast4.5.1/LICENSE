@@ -1,0 +1,66 @@
+c$$$    Integrator for CMB anisotropy, CMB polarization and transfer functions
+c$$$    Developed and maintained by Uros Seljak (useljak@princeton.edu) and 
+c$$$    Matias Zaldarriaga (mzaldarriaga@cfa.harvard.edu)
+c$$$
+c$$$    Permission to use, copy, distribute and modify without fee or royalty at
+c$$$    any tier, this software and its documentation, for any purpose 
+c$$$    and without fee or royalty is hereby granted, provided that 
+c$$$
+c$$$    1)  you agree to comply with the following copyright 
+c$$$    notice and statements, 
+c$$$    including the disclaimer, and that the same appear on ALL copies of the 
+c$$$    software and documentation, including modifications that you make for 
+c$$$    internal use or for distribution:
+c$$$     
+c$$$    Copyright 1996, 1997, 1998 (versions up to 3.0) by 
+c$$$    Harvard-Smithsonian Center for 
+c$$$    Astrophysics and the Massachusetts Institute of Technology.  
+c$$$    All rights reserved.
+c$$$ 
+c$$$    Copyright 1999, 2000 (version 3.0-4.0) by Princeton University
+c$$$    and Institute for Advanced Studies, Princeton. All rights
+c$$$    reserved.
+c$$$     
+c$$$    Copyright 2003 (version 4.2) by Princeton University
+c$$$    and Harvard University. All rights
+c$$$    reserved.
+c$$$     
+c$$$    THIS SOFTWARE IS PROVIDED "AS IS", AND INSTITUTIONS ABOVE MAKE NO 
+c$$$    REPRESENTATIONS OR WARRANTIES, EXPRESS OR IMPLIED.  
+c$$$    By way of example, but not limitation,
+c$$$    THEY MAKE NO REPRESENTATIONS OR WARRANTIES OF 
+c$$$    MERCHANTABILITY OR FITNESS FOR ANY PARTICULAR PURPOSE OR THAT 
+c$$$    THE USE OF THE LICENSED SOFTWARE OR DOCUMENTATION WILL NOT INFRINGE 
+c$$$    ANY THIRD PARTY PATENTS, COPYRIGHTS, TRADEMARKS OR OTHER RIGHTS.   
+c$$$     
+c$$$    2)   Applications are limited to non-commercial and not-for-profit
+c$$$    purposes.
+c$$$
+c$$$    3)   An appropriate acknowledgement is included in any publications 
+c$$$    based on work conducted with usage of the CMBFAST package or any 
+c$$$    of its derivatives.
+c$$$
+c$$$    Boltzmann integrator, initial conditions and recombination routines are 
+c$$$    based on the COSMICS package of E. Bertschinger (astro-ph/9506070). 
+c$$$    See the LICENSE file of the COSMICS distribution for restrictions on
+c$$$    the modification and distribution of this software and acknowledgements.
+c$$$
+c$$$    Recombination routine RECFAST written by D. Scott (UBC), based on 
+c$$$    calculations in the paper by Seager, Sasselov & Scott 
+c$$$    (ApJ, 523, L1, 1999).
+c$$$    See the license in recfast.f for further details regarding restrictions 
+c$$$    on the modification and distribution of this software.
+c$$$   
+c$$$    Configure script, Makefile, fitsout.f, params.f, FITS and IARGC options 
+c$$$    written by Matthias Bartelmann.  
+c$$$   
+c$$$    parallel version developed with David Spergel and Alexey Makarov 
+c$$$   
+c$$$	dark energy/quintessence routines developed with Rob Caldwell 
+c$$$   
+c$$$cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
+
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C                                VERSION 4.2                           C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+

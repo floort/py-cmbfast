@@ -1,0 +1,26 @@
+To compile the code first build 
+the Makefile with the configure script.
+(The configure script and Makefile were provided by Matthias
+Bartelmann, many thanks !!!)
+
+The configure script has many options, try
+
+configure --help 
+
+for help. Typing configure with no options will creat the
+default Makefile.
+
+Once the configure script has created the Makefile
+type make and the code should compile with the
+requested options. You may have to delete the object files 
+before make will do anything, just type make clean.
+
+We encourage you to go over the examples in the 
+EXAMPLE directory and the documentation in the DOC directory.
+
+Have fun,
+
+Uros and Matias
+
+
+

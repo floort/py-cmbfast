@@ -1,0 +1,92 @@
+This is valid for version 4.3.
+
+The UNNORM option (with-cobe=no) allows one to connect CMBFAST outputs to 
+the primordial power spectrum. We have changed the normalizations
+to follow standard textbooks such as Liddle and Lyth (2000, Cambridge
+University Press) and Leach etal, Phys.Rev. D66 (2002) 023515 (the two 
+are not fully self-consistent, see below). If old normalization is desired 
+use OLDNORM option.
+
+The initial conditions are set with curvature perturbation zeta=1 (often called R). 
+In matter era it is related to gravitational potential Phi as Phi=3zeta/5.
+Delta_zeta^2=k^3P_zeta(k)/(2pi^2) is power per log interval of curvature 
+perturbation. This is computed in powersflat and powersopen. 
+For a scale invariant spectrum it is unity, otherwise it is 
+unity at the pivot point. The pivot point is set in that routine, 
+currently to k=0.05/Mpc, but can easily be changed to any value.
+
+In terms of slow-roll inflation one has Delta_zeta^2=H^2G/(pi epsilon), where 
+epsilon=(V'/V)^2/(16pi G)
+
+The power spectrum for CMB is given by 
+
+C_l=4pi \int dk/k \Delta_zeta^2 Delta_l(k)^2,
+
+where Delta_l is the transfer function for temperature perturbation.
+On large scales one has Delta_l(k)=R/5j_l(ktau_0) (where tau_0 is
+comoving distance to recombination). This can be analytically integrated
+to obtained Sachs-Wolfe result:
+
+l(l+1)C_l/2pi=\Delta_zeta^2/25. Since we normalize to \Delta_zeta^2=1
+one finds that for low l the output gives 1/25 (in reality it is somewhat 
+larger because of integrated Sachs-Wolfe effect).
+
+Thus to obtain l(l+1)C_l/2pi=1e-10 as required by COBE one needs 
+\Delta_zeta^2=2.5e-9 or \Delta_zeta=5e-5. Often one sees delta_H=2/5zeta, 
+which is thus 2e-5 for COBE.
+
+WMAP presented their results in terms of our old normalization. To get old
+normalization multiply new one by roughly 800pi^2(5/3)^2. 
+In terms of WMAP one has A=\Delta_zeta^2*(2.726e6)^2*(3/5)^2/(800pi^2)
+Again this expression is not exact, since it is based on the approximation 
+that initial Psi (radiation era) equals final Psi (matter era). While in 
+matter era Psi=3zeta/5 holds with high accuracy outside horizon, Psi in 
+general changes from radiation to matter. In the absence of neutrinos 
+the change in 10%. However, anisotropic stress of neutrinos reduces this 
+such that for 3 neutrino families Psi remains almost unchanged from 
+radiation to matter epochs (Phi however changes even more in this case).
+
+For tensors we have similarly
+
+C_l^T=4pi \int dk/k \Delta_h^2 Delta_l^T(k)^2.
+
+There are several definitions of Delta_h in the literature. We choose
+the one that relates to slow roll inflation via 
+
+Delta_h^2=16GH^2/pi, so that 
+
+r=Delta_h^2/\Delta_zeta^2=16epsilon=-8n_T
+
+This choice is motivated by the closeness of this r to the one
+often defined in terms of C_ls. Very approximately one has 
+r=1.8C^T_10/C^S_10=1.7C^T_2/C^S_2, although this depends on ISW
+and is thus very approximate. Note also that Liddle and Lyth define 
+Delta_h^2 a factor of 4 smaller. Here we followed recent papers such 
+as Leach etal Phys.Rev. D66 (2002) 023515
+
+To get old tensor normalization multiply by 20000*128pi^2 (the 
+factor 20000 was removed for CMBFAST4.1 used by WMAP).
+
+Finally, to get the matter power spectrum normalization in the UNNORM
+case (for NORM follow COBEnormalize routine) one computes
+the density perturtbation power per log interval 
+Delta_delta^2=P_delta(k)k^3/2pi^2 
+
+Delta_delta^2=k^4 tf^2 Delta_zeta^2, 
+
+where Delta_zeta^2 is obtained by a call to powersflat or powersopen
+times initial amplitude
+and tf is the transfer function read from the transfer function output.
+Note that the transfer function is written out with k in units of h/Mpc, 
+so one must convert to k in Mpc^-1 used in the powersflat 
+by multiplying it with h. 
+
+For example, in a reasonable model at k=.18h/Mpc (ie k=.126/Mpc) 
+one finds tf=1.37e6. Then for n=1 powersflat=1 and so 
+Delta_delta^2=(0.126)^4 (1.37e6)^2 2.5e-9 =1.1, where we normalized
+to \Delta_zeta^2=2.5e-9. This scale is close to sigma8 scale and so 
+the power per log interval is close to unity.
+
+If you use COBE normalization then the code outputs d2norm. Then 
+Delta_delta^2=k^4*tf^2*powers*d2norm
+where powers is obtained by call powersflat(k,in,apowers)

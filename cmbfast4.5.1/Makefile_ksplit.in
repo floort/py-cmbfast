@@ -1,0 +1,16 @@
+# Makefile template 
+# for ksplitting
+
+OBJKSPLIT = ksplit.o driversub.o cmbflat.o cmbopen.o lensing.o \
+	subroutines.o params.o recfast.o $(FITSOUT)
+
+ksplit: $(OBJKSPLIT) $(dverk) 
+	$(FC) $(FFLAGS) -o $@ $(OBJKSPLIT) $(dverk) $(LDFLAGS)
+
+
+$(OBJKSPLIT): $(incfast) $(inclval)
+
+
+
+
+

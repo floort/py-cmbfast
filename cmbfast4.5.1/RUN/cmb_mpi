@@ -1,0 +1,1 @@
+time mpirun -v -c 14 -nger -nsigs -O -c2c -nx time ./cmb_par <cmb.in &>.out

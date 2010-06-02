@@ -1,0 +1,9 @@
+#!/bin/sh
+export CMBMPILOCALDIR=$1
+rm -vfr $CMBMPILOCALDIR
+mkdir -p $CMBMPILOCALDIR
+chmod -v g-w,o-w,u+w $CMBMPILOCALDIR
+ln -s -f $CMBMPILOCALDIR 
+
+
+

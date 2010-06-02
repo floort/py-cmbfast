@@ -1,0 +1,60 @@
+The IARGC options allows for inputs directly in the
+command line for jlgen, ujlgen and jlens and form a file 
+for cmb. The example script shows how the files in this 
+directory were generated. 
+
+These are the explanations of the entries of the 
+input file (which correspond to the questions in the 
+driver).
+
+To compile CMBFAST with this option use
+configure --with-iargc=yes
+and then make.
+
+---------------------------------------------------------
+
+initfl = 1   ! Type of initial conditions 1 for adiabatic, 2 for
+	     ! Isocurvature, etc 
+ict = 2	     ! 0 for cmb alone, 1 for transfer function alone and 2 for both
+lmo = 1500   ! lmax
+akmax0 = 3000.0 ! ketamax
+akmaxt = 5.0 ! Maximum k for transfer function
+nlnkt = 5    ! Number of k values per decade
+ntf = 1	     ! Number of redshifts outputs for the Tf
+z(1) = 0.0   ! redshift of the output
+ftf(1) = trans.d !filename of the output
+omegab = 0.05 
+omegac = 0.95
+omegav = 0.0
+omegan = 0.0
+h0 = 50.0
+tcmb = 2.726
+yhe = 0.24
+annur = 3.04
+annunr = 0.0
+rcflag = 0    ! 0 for Peebles recombination 1 for recfast
+riflag = 0.0  ! 0 for no reionization, 1 to give tau, 2 to give z and xe
+optdlss = 0.0 ! tau (optical depth to the last scattering surface) 
+zri = 50.0    ! redshift of reionization
+rif = 0.2     ! reionization fraction (xe)
+itflag = 0    ! 0 for scalar alone, 1 for tensor and scalar, 2 for
+	      ! tensor alone 3 for k< k_* scalar and 4 for k > k_* scalar 
+nn = 1	      ! # of spectral indeces required
+an(1) = 1.0   ! spectral index
+itn = 0       ! 0 for nt=ns-1 1 for different 
+ant(1) = 0.0  ! tensor spectral index
+irt = 0	      ! 0 ratio of scalar= 7(1-ns) 1 for different
+rat(1) = 0.0  !	ratio T/S
+lensflag = 1  ! 0 for no lensing 1 for lensing
+fcl = cl_unlensed.d ! filename for unlensed output
+fgl = cl_lensed.d   ! filename for lensed output
+fjl = jl.dat	    ! jl file
+tcl = cl_tensor.d   ! tensor output filename
+ujl = ujl.dat	    ! ujl file
+fts = cl.fits	    ! filename with fits output
+jgl = jlens.dat	    ! jlens file
+
+
+
+
+

@@ -1,0 +1,48 @@
+This is a README for running CMBFAST in parallel. It uses LAM/MPI 
+and can run on clusters with distributed memory (beowulf clusters). 
+So far it was only tested on PGI fortran and does not work with g77.
+The strategy is to distribute individual k modes onto separate nodes. 
+Since the running time for each k mode increases with amplitude of k 
+the efficiency decreases with number of nodes. Recommended number is 8 nodes.
+
+WARNING: this option is provided as is and there is no software support 
+from the authors.
+
+Instructions:
+
+in RUN/Makefile edit NUMHDD=number of machines with local disks -1, 
+NUMPROC=number of processors, LOCALDATADIR=local directory for input files
+
+example: 
+NUMHDD=6
+NUMPROC=14
+LOCALDATADIR=/var/tmp/uros/1
+
+
+or if individual processors have no local disks then 
+
+NUMHDD=0
+NUMPROC=14
+LOCALDATADIR=./d
+
+In ~/.bashrc put 
+export LAMHF77=pgf90
+
+an example to configure is in conf, run 
+
+./conf
+
+cd RUN
+
+generate jl.dat and if needed also 
+ujl.dat, eos.dat amd jlens.dat (note that the names must match)
+
+cd .. 
+
+make
+ 
+cd RUN
+
+an example to run is
+
+./cmb_mpi

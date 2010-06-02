@@ -1,0 +1,6 @@
+This directory contains some examples to clarify the normalization 
+convetion which is explained in DOC/README_NORMALIZATION.
+Note that this convention is different than in previous versions.
+The script example.scr will run cmbfast a few times and the sm 
+file will create a plot of the normalized power spectrum.
+

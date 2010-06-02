@@ -1,0 +1,54 @@
+#!/bin/csh
+### 
+### This script shows an example of how to run 
+### CMBFAST with IARGC input. 
+
+##
+## Bessel function files should have been created before running this  
+## script. 
+##
+
+##
+## Directory with CODE
+## Make sure the code was compiled using 
+## configure --with-iargc=yes
+## make
+##
+
+set THISDIR=`pwd`
+set CODEDIR = $THISDIR/../..
+
+cd $CODEDIR
+make tidy
+./configure --with-iargc=yes
+make
+cd $THISDIR
+
+initialize:
+
+## run jl, ujl and jlens calculation 
+## note that with this compilation flags inputs to 
+## the code are directly written in the command line 
+## or for cmbfast is read from a file. 
+
+$CODEDIR/jlgen 1500 3000 jl.dat
+#$CODEDIR/ujlgen 1500 3000 ujl.dat
+$CODEDIR/jlens 1500 jlens.dat
+
+##
+## Compute Cls
+##
+
+cls:
+
+$CODEDIR/cmb cmb.par
+
+clean:
+
+rm -f jl.dat
+rm -f ujl.dat
+rm -f jlens.dat
+
+
+
+

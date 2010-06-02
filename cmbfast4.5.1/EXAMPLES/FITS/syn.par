@@ -1,0 +1,15 @@
+# This parameter file is used by "make test".
+
+simul_type = 2
+
+nsmax=128
+
+nlmax=256
+
+infile=cl.lcdm.fits
+
+iseed=-1
+
+fwhm_arcmin=30
+
+outfile=maps_lcdm.fits

@@ -1,0 +1,734 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.7 [en] (X11; U; SunOS 5.7 sun4u) [Netscape]">
+   <title>CMBFAST:On-line documentation</title>
+</head>
+<body bgcolor="#FFFFFF" background="relief.gif">
+<a NAME="start"></a>
+<p><img SRC="cmbfast_tr.gif" height=248 width=299 align=LEFT>
+<br>&nbsp;
+<dl>
+<dd>
+CMBFAST:</dd>
+
+<dd>
+On line documentation.</dd>
+
+<dd>
+<i>Last updated 02/18/03.</i></dd>
+</dl>
+
+<br>&nbsp;
+<p>
+<hr>
+<br>&nbsp;
+<h1>
+<b>Contents:</b></h1>
+
+<li>
+<b><a href="#overview">Overview.</a></b></li>
+
+<li>
+<b><a href="#version">Version and related matters.</a></b></li>
+
+<li>
+<b><a href="#lensing">Lensing Effect</a></b></li>
+
+<li>
+<b><a href="#closed">Closed universes</a></b></li>
+
+<li>
+<b><a href="#flatopen">Flat and Open codes</a></b></li>
+
+<li>
+<b><a href="#files">Files and Compilation</a></b></li>
+
+<li>
+<b><a href="#output">Output and COBE normalization</a></b></li>
+
+<li>
+<b><a href="#details">Some details</a></b></li>
+
+<br>&nbsp;
+<p>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<p>If you have comments or need information not available in this web site
+please send us an <a href="mailto:mzaldarriaga@cfa.harvard.edu,useljak@princeton.edu">e-mail
+</a>.
+<br>&nbsp;
+<p>
+<hr>Back to <b><a href="http://cmbfast.org">CMBFAST</a></b>.&nbsp;<a NAME="overview"></a>
+<br><!*******************************************************************>
+<hr>
+<br>&nbsp;
+<h1>
+Overview</h1>
+CMBFAST is a code for calculating the linear cosmic microwave background
+(CMB) anisotropy spectra based on integration over the sources along the
+photon past light cone. In this approach the temperature anisotropy is
+written as a time integral over the product of a geometrical term and a
+source term.
+<p>The geometrical term is given by radial eigenfunctions which do not
+depend on the particular cosmological model. The source term can be expressed
+in terms of photon, baryon and metric perturbations, all of which can be
+calculated using a small number of differential equations.
+<p>This split clearly separates between the dynamical and geometrical effects
+on the CMB anisotropies. More importantly, it allows to significantly reduce
+the computational time compared to standard methods. This is achieved because
+the source term, which depends on the model and is generally the most time
+consuming part of calculation, is a slowly varying function of wavelength
+and needs to be evaluated only in a small number of points. The geometrical
+term, which oscillates much more rapidly than the source term, does not
+depend on the particular model and can be computed separately. Standard
+methods that do not separate the two terms and require a much higher number
+of evaluations.
+<p>This method leads to about two orders of magnitude reduction in CPU
+time when compared to standard methods and typically requires a minute
+on a workstation for a single model. The method should be especially useful
+for accurate determinations of cosmological parameters from CMB anisotropy
+and polarization measurements that will become possible with the next generation
+of experiments.
+<p>The numerical implementation of integral solution to the photon transport
+equation differs in flat and non-flat geometries. In the flat case the
+geometrical term is given by the spherical Bessel function and can be computed
+in advance. In the non-flat geometries precomputing the ultra-spherical
+Bessel functions is not convenient as the memory space needed for storage
+would be very large because these functions depend both on the radial distance
+and the wavevector. Instead we integrate their differential equation to
+obtain the ultra-spherical functions.
+<p>The spectra are normalized using <a href="http://xxx.lanl.gov/ps/astro-ph/9607060">Bunn
+and White </a>fit to the shape and amplitude of the CMB power spectrum.
+<p>CMBFAST can also be used to calculate and normalize the transfer functions
+for different species.
+<p>Back to <a href="#start">Contents&nbsp;</a><a NAME="version"></a>
+<br><!*******************************************************************>
+<hr>
+<br>&nbsp;
+<h1>
+Version and related matters.</h1>
+<font color="#008000"><font size=+2>Current Version <b>4.2&nbsp; </b></font></font><font color="#000000">
+
+This version has several new features.
+
+<ul>
+<li>
+Its accuracy has been improved to be below the sampling variance up to
+l=3000 (over most of the range it is around 0.1% on unlensed Cls and even
+better on transfer functions, see Seljak,
+Sugiyama, White and Zaldarriaga 2003, in preparation). 
+This is valid at and around the current best fitted (WMAP) model
+assuming flat geometry and high accuracy option should be used. For the 
+same precision in EE and TE one should also increase l sampling with 
+lvalues_fine.inc
+</li>
+
+<li> New models have been added: dark energy/quintessence (with Rob  Caldwell),
+more general form of primordial power spectrum shape, warm dark matter and
+5-dimensional model. The implementation of dark energy/quintessence 
+allows for either constant equation of state or as an input file (eos.dat), 
+where first column is expansion factor with uniform sampling and second 
+column is equation of state w. Uniform sampling is required for speed 
+issues, but can have (almost) any number of lines, so this does not 
+impose any serious limitations. Currenty only models with
+canonic kinetic term are implemented. For warm dark matter models one 
+can allow g*, number of degrees of freedom, to increase above the 
+canonic value 10.75. For 5-dimensional models there is a compiler flag
+in configure. We now allow for curvature in the power spectrum as well.
+</li>
+
+<li> A parallel LAM/MPI version has been developed with David Spergel and 
+Alexey Makarov. It has been tested on beowulf clusters using Pentium's and
+also on a shared memory Origin. It uses MPI and needs LAM. This implementation
+may not work on all clusters. 
+
+</li>
+
+<li> New compiler options have been introduced (see configure --help) and the
+normalization has been changed to simplify the comparison to
+previous literature. See DOC/README_NORMALIZATION for more details.
+</li>
+</ul>
+
+<p><font color="#008000"><font size=+2>Version <b>4.0</b>. </font></font>
+This
+version implements a k splitting technique
+that allows to use a flat omega=1 model to compute the high l multipoles
+of lambda, open and closed models exploiting the natural degeneracy in
+the CMB data. This technique gives a few percent accuracy and results in
+large time savings especially when computing a large number of models.
+The time savings can be up to a factor of 10 for individual models and
+significantly more for grids of models.&nbsp;&nbsp; We also include subroutines
+to write the output as a fits table ready to input to the HEALPIX package.</font>
+<br><font color="#000000">Several compile time options have been added
+to increase the flexibility of CMBFAST. For example, it can be compiled
+such that the output is not COBE normalized and it allows command line
+inputs. A directory with examples meant to explain these new features has
+been added. A bug that affected some models with optical depth different
+from 0 reported by Andew Liddle has been fixed. The accuracy of the calculation
+of C(l=2) for gravity waves has been improved, as pointed out in astro-ph/0006392
+.</font>
+<p><font color="#008000"><font size=+2>Version <b>3.2</b>.</font></font>
+<br>The code allows for the calculation of spatially closed universes.
+You can use RECFAST to make a more accurate calculation of recombination.
+The l sampling and maximum number of spectral indeces can be easily changed
+using new include files.
+<p><font color="#008000"><font size=+2>Version <b>3.0</b>. </font></font>With
+this version the code allows for spatially closed universes. Details of
+the differences with open universes are noted in another <a href="#closed">section</a>.
+The package contains several include files that can be used to change the
+l sampling. This is important because for closed models the Cl spectra
+is compresed in l space and so additional sampling may be necessary. An
+instability that developed for low k modes in some models was corrected.
+A bug in the lensing formula that affected the non-linear calculation was
+corrected. The required memory has been reduced by a more efficient use
+of common blocks. The RECFAST package can be used to track recombination
+more accurately.
+<p><font color="#008000"><font size=+2>Version <b>2.1</b>.</font></font>
+<br>We named the first version 2.1. List of bugs we have fixed in this
+version:
+<ul>
+<li>
+In subroutine foutputt in file <a href="#flat">cmbflat.f</a> the formula
+for dte had a typo, the correct formula is now in place. This affected
+the first few l multipoles of the E polarization.</li>
+
+<li>
+There was an inconsistency between the power spectrum used in subroutine
+COBEnormalize in file <a href="#subrout">subroutines.f</a> and that used
+in the calculation of the Cls for open models with n different from one.
+This gave wrong power spectrum normalization for these models.</li>
+</ul>
+<font color="#008000"><font size=+2>Version <b>2.2</b>. </font></font>In
+this version we added isocurvature initial conditions to the open code.
+<p><font color="#008000"><font size=+2>Version <b>2.3.1</b>.</font></font>
+<br>In this version we added tensor modes to the open universe code.
+<p>We fixed some minor problems with the isocurvature initial conditions.
+<p>The accuracy of the transfer functions was revised, the hierarchy for
+the neutrinos is now solved to a higher l to get a 1% or better accuracy
+at higher wavevectors, k > 1 h Mpc^(-1). The user is allowed to choose
+between the higher accuracy mode or the previous one which may result in
+few percent differences at high k.
+<p><font color="#008000"><font size=+2>Version <b>2.3.2</b>.</font></font>
+<br>A minor bug in the massive neutrino calculation was fixed. It resulted
+in problems in the CMB spectrum for some extreme models.
+<p><font color="#008000"><font size=+2>Version <b>2.4</b>.</font></font>
+<br>We added the lensing routines and the possibility of using a non-integer
+number of neutrinos. This is useful to take into account some QED effects
+and a more accurate calculation of the neutrino distribution function after
+electron positon anhilition.
+<p><font color="#008000"><font size=+2>Version <b>2.4.1</b>.</font></font>
+<br>We implemented several minor changes:
+<ul>
+<li>
+<a href="#inc">cmbfast.inc</a> can be used to set the maximum multipole
+moment l that can be calculated. It is used internally to dimension arrays.
+The make command will automatically recompile all the files that need this
+input if the file is changed.</li>
+
+<li>
+The definition of matter power spectrum normalization from COBE d2norm
+was changed to make it easier to modify the initial power spectrum, when
+it is not a power law. User only needs to change powersflat and powersopen
+subroutines.</li>
+
+<li>
+We fixed a bug in the lensing subroutine and one in the routine that calculates
+the parameters of reionization that affected massive neutrino models.</li>
+
+<li>
+The memory requirements were reduced by about 1/3 using some simple modifications.</li>
+</ul>
+<font color="#008000"><font size=+2>Version <b>2.4.1</b>.</font></font>
+<br>In the course of the last year we have made several changes to the
+code, often based on suggestions from the users. To facilitate the trouble
+shooting we introduced a version number, allowing the users to identify
+whether they are running the latest version or not. If you find a problem
+we recommend you first read the changes made after that version and use
+the latest version to see if the problem persists. If it does send us an
+email with a description of the problem. Code version is located in the
+<a href="#driver">driver.f</a>
+file.
+<p>Back to <a href="#start">Contents&nbsp;</a><a NAME="lensing"></a>
+<br><!*******************************************************************>
+<hr>
+<br>&nbsp;
+<h1>
+Lensing Effect</h1>
+We have added subroutines needed to include the gravitational lensing effects
+on the CMB spectra. Bessel functions are needed to calculate the corrections.
+We tabulate this functions so jlens.f has to be run first to generate the
+appropriate file. The increase in computational time is negligible.
+<p>Lensing will create B type polarization even for scalar modes so the
+output of the lensed spectra has an extra column for the B polarization.
+The format is the same as the output for the tensor modes.
+Currently the accuracy of lensing routines has not been tested at 0.1% level.
+<p>Back to <a href="#start">Contents&nbsp;</a><a NAME="closed"></a>
+<br><!*******************************************************************>
+<hr>
+<br>&nbsp;
+<h1>
+Closed Universes</h1>
+CMBFAST can calculate spectra in closed universes. For the user the main
+worry should be l sampling. When the angular diameter distance to the last
+scattering surface is reduced, as happens in closed universes, the power
+spectra become compressed in l. This means that our l sampling of 50 may
+not be good enough and should be increased. The l values used in the calculation
+are in the file lvalues.inc. To change the sampling only this file needs
+to be modified and the code recompiled. Remember that you should also run
+jlgen and ujlgen again. For convenience we include two sample lvalues.inc
+files, lvalues_usual.inc and lvalues_fine.inc, which contain the usual
+choice and a finer sampling every 10 ls, respectively. By copying one of
+these files into lvalues.inc and recompiling the user can easily switch
+between l samplings.
+<p>Extreme closed models with a maximum l of 1500 or more need to calculate
+the acoustic peaks well into the damping tail. In this case the code takes
+much longer that the open code for the same maximum l. In this case we
+suggest the user runs the flat model that is degenerate with that closed
+model and shift the spectra using the different angular diameter distances
+at high l.
+Closed models have not been tested for high precision 0.1% accuracy.
+<p>Back to <a href="#start">Contents&nbsp;</a><a NAME="flatopen"></a>
+<br><!*******************************************************************>
+<hr>
+<br>&nbsp;
+<h1>
+Flat and open codes</h1>
+The codes for flat and open geometries only differ in the way the geometrical
+term is calculated. For flat models the spherical Bessel functions are
+interpolated from the precomputed tables. In the open code the ultra-spherical
+Bessel functions are obtained by integrating a differential equation.
+<p>Although the method used in the open case could certainly be applied
+for flat models we decided to continue using the interpolation in the flat
+case because it requires less CPU time.
+Open models have not been tested for high precision 0.1% accuracy.
+<p>Scalar perturbations can only have isentropic initial conditions in
+open geometries.
+<p>For gravity waves we recommend doing the calculation up to l of approximately
+300 as their contribution becomes unimportant at higher l. This allows
+to stop the calculation at smaller wavevectors (ketamax=900 or so) and
+save a considerable amount of CPU time.
+<p>Back to <a href="#start">Contents&nbsp;</a><a NAME="files"></a>
+<br><!*******************************************************************>
+<hr>
+<br>&nbsp;
+<h1>
+Files and Compilation</h1>
+The code is provided as a compressed tar file, which should be unpacked
+using
+<p>gunzip cmbfast.tar.gz
+<br>tar -xvf cmbfast.tar
+<p>When unpacked the CMBFAST package should be composed of several files
+including,
+<ul>
+<li>
+<a href="#makefile">Makefile.in</a></li>
+
+<li>
+<a href="#makefile">Makefile_ksplit.in</a></li>
+
+<li>
+<a href="#driver">driver.F</a></li>
+
+<li>
+<a href="#flat">cmbflat.F</a></li>
+
+<li>
+<a href="#open">cmbopen.F</a></li>
+
+<li>
+<a href="#lensingf">lensing.f</a></li>
+
+<li>
+<a href="#subrout">subroutines.F</a></li>
+
+<li>
+<a href="#jlgen">jlgen.F</a></li>
+
+<li>
+<a href="#ujlgen">ujlgen.F</a></li>
+
+<li>
+<a href="#ujlgen">jlens.F</a></li>
+
+<li>
+<a href="#dverk">dverk.f</a></li>
+
+<li>
+<a href="#params">params.f</a></li>
+
+<li>
+<a href="#recfast">recfast.f</a></li>
+
+<li>
+<a href="#driver">driversub.f</a></li>
+
+<li>
+<a href="#ksplit">ksplit.f</a></li>
+
+<li>
+<a href="#cmbfinc">cmbfast.inc</a></li>
+
+<li>
+<a href="#lvalinc">lvalues.inc</a></li>
+
+<li>
+<a href="#lvalinc">cmbpar.inc</a></li>
+</ul>
+We have several of different ways to use the code in an EXAMPLE directory.
+<p>We now support several compile time options thus many files are preprocessed
+(.F). Thus we recomend
+<br>that you compile using the provided configure script to generate a
+Makefile&nbsp; and then use make. Manual compilation should work as well.
+<p>The default options can be compiled by typing configure and then make.&nbsp;
+If you type configure --help you will
+<br>get a list of other options. There is an EXAMPLE directory where you
+will find more info. Options include:
+<br>&nbsp;
+<ul>
+<li>
+UNNORM : this option outputs the results without COBE normalization. See
+README files in the EXAMPLES directory for a more detailed explanation
+of the internal CMBFAST normalization . To use this option compile using
+configure --with-cobe=no or add -DUNNORM manually to each compilation (eg.
+f77 -c -DUNNORM driver.F). This option MUST be used if the K splitting
+technique is to be used.</li>
+
+<li>
+FITS : This option also outputs the results in fits format so they can
+be used with the HEALPIX package. You must have the fits library installed
+in your computer. See the README file in the EXAMPLE directory for more
+details. To use this options use configure --with-fits=yes&nbsp; or add
+-DFITS manually to each compilation step.</li>
+
+<li>
+IARGC : this option allows for input directly from the command line for
+jlgen, ujlgen, jlens and from a file for cmb. Compile with&nbsp; configure
+-- with-iargc=yes or add -DIARGC in the manual compilation.</li>
+</ul>
+
+<p><br>More than one option can be used at the same time.
+<br>The configure script is provided as an example, we are sure you will
+be able to improve it.
+<br>We recomend going through the example directory for further explanations
+and notes.
+<p>The first thing needed is to generate the tables of spherical Bessel
+functions using jlgen.F (to compile
+<br>manually use for example f77 -o jlgen jlgen.F ). The questions asked
+by the code should be self explanatory, default values appear between brackets.
+<p>This should be repeated for the ultra-spherical Bessel functions, you
+should run ujlgen (to compile&nbsp; manually f77 -o ujlgen ujlgen.F).
+<p>Bessel functions are needed for the lensing calculation, you should
+run jlens (to compile&nbsp; f77 -o jlens jlens.F).
+<p>Next you run CMBFAST itself,
+<br>( f77 -o cmbfast driver.F cmbflat.F cmbopen.F lensing.F subroutines.F
+params.f recfast.f dverk.f)
+<br>The questions asked by the code should be self explanatory and again
+default values appear between brackets.
+<p>We recomend compiling with the most aggressive optimization flags your
+compiler has, for example something like
+<br>f77 -fast -O5 works very well on a dec-alpha.
+<p>Back to <a href="#start">Contents&nbsp;</a><a NAME="files"></a>
+<br>
+<hr><!********************************************************************>
+<h3>
+Makefile</h3>
+This file is a sample makefile. By typeing make&nbsp; all the necessary
+compilations steps should be taken.
+<br>Precompile options can be used as explained above.
+<p>Back to <a href="#files">Files and Compilation&nbsp;</a><a NAME="driver"></a>
+<br><!********************************************************************>
+<br>&nbsp;
+<h3>
+driver.F</h3>
+This driver is the interface between the user and the various subroutines
+in the CMBFAST package. It asks for the parameters of the cosmological
+model to be computed and decides which subroutines to call. If several
+models need to be calculated a loop can be introduced in this program.
+Also if the flat or the open codes are needed separately this driver should
+be changed so that only one of the codes is called.
+<p>We also provide driversub.f which is a subroutine that can be used to
+call CMBFAST from a program directly. It is a modified version of driver.F.
+<p>Comments inside this driver will help the user either put a loop over
+models or construct another driver for the open or flat codes alone.
+<p>Back to <a href="#files">Files and Compilation&nbsp;</a><a NAME="flat"></a>
+<br><!********************************************************************>
+<br>&nbsp;
+<h3>
+cmbflat.F</h3>
+This file contains the part of the flat geometry code that is not common
+to the open model code. The rest of the code is included in the subroutines.f
+file.
+<p>Back to <a href="#files">Files and Compilation&nbsp;</a><a NAME="open"></a>
+<br><!********************************************************************>
+<br>&nbsp;
+<h3>
+cmbopen.F</h3>
+This file contains the part of the open/close geometry code that is not
+common to the flat model code. The rest of the code is included in the
+subroutines.f file.
+<p>Back to <a href="#files">Files and Compilation&nbsp;</a><a NAME="lensingf"></a>
+<br><!********************************************************************>
+<br>&nbsp;
+<h3>
+lensing.F</h3>
+This file contains subroutines needed to calculate the lensing effect on
+the CMB spectra.
+<p>Back to <a href="#files">Files and Compilation&nbsp;</a><a NAME="subrout"></a>
+<br><!********************************************************************>
+<br>&nbsp;
+<h3>
+subroutines.F</h3>
+This file contains the subroutines common to both flat and open codes.
+If the flat or open codes need to be compiled separately this file should
+be included in both codes.
+<p>Back to <a href="#files">Files and Compilation&nbsp;</a><a NAME="ksplit"></a>
+<br><!********************************************************************>
+<br>&nbsp;
+<h3>
+ksplit.f</h3>
+This is a simple wrapper to use the k split method. It will calculate a
+high k and low k cl spectra and combine them.
+<br>For more info check the README file under the EXAMPLES/KSPLIT directory.
+<p>Back to <a href="#files">Files and Compilation&nbsp;</a><a NAME="jlgen"></a>
+<br><!********************************************************************>
+<h3>
+jlgen.F</h3>
+This program generates the tables of Bessel functions for the flat code
+so it should be compiled and run before CMBFAST. The values of lmax and
+ketamax used to generate this table should be consistent to what is the
+entered to CMBFAST. This means the values of lmax and ketamax entered to
+CMBFAST should be smaller than those used to generate the tables.
+<p>Back to <a href="#files">Files and Compilation&nbsp;</a><a NAME="ujlgen"></a>
+<br><!********************************************************************>
+<br>&nbsp;
+<h3>
+ujlgen.F</h3>
+This program generates the tables of ultra-spherical Bessel functions for
+the open code so it should be compiled and run before CMBFAST. This tables
+are used to compute the initial conditions for the ultra-spherical Bessel
+function integration The values of lmax and ketamax used to generate this
+table should be consistent to what is the entered to CMBFAST. This means
+the values of lmax and ketamax entered to CMBFAST should be smaller than
+those used to generate the tables.
+<p>Back to <a href="#files">Files and Compilation&nbsp;</a><a NAME="delta"></a>
+<br><!********************************************************************>
+<br>&nbsp;
+<h3>
+dverk.f</h3>
+This file contains the integrator we are using to evolve the differential
+equations (from <a href="http://netlib.org/">netlib</a>). If you are familiar
+with other integrators you can try them by substituting the calls to derivs
+by calls to your favorite integrator. Dverk is responsible for a large
+part of the CPU time used by the code, so if your favorite integrator turns
+out to be faster and as accurate as dverk please let us know.
+<p>Back to <a href="#files">Files and Compilation</a>
+<p><a NAME="cmbfinc"></a>
+<br><!********************************************************************>
+<br>&nbsp;
+<h3>
+cmbfast.inc</h3>
+This file contains several parameters used to dimension arrays. Sometimes
+in order to increase the maximum l or the k and l sampling the user may
+want to increase the value of some of the parameters.
+<p>Back to <a href="#files">Files and Compilation</a>
+<p><a NAME="lvalinc"></a>
+<br><!********************************************************************>
+<br>&nbsp;
+<h3>
+lvalues.inc and cmbpar.inc</h3>
+cmbpar.inc contains a common block holding all the parameters.
+<br>lvalues.inc contains the list of l values that is actually being calculated,
+other options
+<br>are available in the directory under similar names.
+<p>Back to <a href="#files">Files and Compilation</a>
+<p><a NAME="params"></a>
+<br><!********************************************************************>
+<h3>
+params.f</h3>
+This file contains subroutines used in the IARGC compilation option.
+<br>&nbsp;
+<p>Back to <a href="#files">Files and Compilation</a>
+<p><a NAME="recfast"></a>
+<br><!********************************************************************>
+<h3>
+recfast.f</h3>
+Recfast package for improved recombination calculation.
+<br>&nbsp;
+<p>Back to <a href="#files">Files and Compilation</a>
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<p><a NAME="output"></a>
+<br><!********************************************************************>
+<br>
+<hr>
+<br>&nbsp;
+<h1>
+Output and COBE normalization</h1>
+In this section we describe the output of the code.
+<ul TYPE=square>
+<li>
+<b>CMB results:</b></li>
+
+<br>CMB temperature and polarization can be characterized by three variables,
+T,E,B. Only four power spectra are needed to describe the statistics, those
+for T, E, B and the cross correlation between E and T. The cross correlations
+between B and E or T vanishes as these quantities have opposite parities.
+We refer to the related <a href="http://cmbfast.org/cmbfast.html#papers">publications
+</a>listed
+in the CMBFAST webpage for a detailed discussion on the relation of these
+quantities with the Stokes parameters. For scalar modes B vanishes identically
+and so the code outputs T, E and TE cross-correlation. For tensor modes
+B is no longer zero and power spectra for T, E, B and TE are given. The
+output is done by <tt>subroutine output </tt>in file <a href="#flat">subroutines.f</a>.
+<li>
+<b>Transfer functions:</b></li>
+
+<br>If requested the code will calculate and output matter transfer functions.
+The output can be for specified redshifts, which is particularly useful
+in models with massive neutrinos. If there are no massive neutrinos the
+output file gives wavector k/h, CDM, baryons, photons and massless neutrinos;
+the wavevector is in units of Mpc/h where h stands for the Hubble constant
+in units of 100 km/sec/Mpc. A sixth column for massive neutrinos is added
+if necessary. Note that these are "<b>raw</b>" transfer functions, their
+normalization reflects our choice of the initial
+conditions. This is explained in more detail in DOC/README_NORMALIZATION. 
+The output is done by <tt>subroutine outtransf </tt>in file
+<a href="#flat">subroutines.f</a>.
+<li>
+<b>COBE normalization:</b></li>
+
+<br>COBE normalization is done by <tt>subroutine COBEnormalize</tt> in
+file
+<a href="#flat">subroutines.f</a>. It uses <a href="http://xxx.lanl.gov/ps/astro-ph/9607060">Bunn
+and White </a>fit to the shape and amplitude of the CMB power spectra.
+The output is l(l+1)Cl/2pi. When the
+transfer functions are requested sigma_8 and a normalization factor (d2norm)
+for the matter power spectra are also given. The transfer functions are
+written to a file while the equations are integrated so the above normalization
+factor should be used get the correct normalization. You should look in
+file EXAMPLES/TF/README for a discussion that illustrates how to obtain
+a normalized delta^2(k) and sigma8.
+<li>
+<b>Initial power spectrum:</b></li>
+
+<br>The initial power spectrum is only used at the end of the calculation
+when Cls are being computed. Thus a loop over different power spactra is
+simple and no additional time is added to the calculation. The power spectra
+are calculated in subroutines <tt>subroutine powersflat
+</tt>and <tt>subroutine
+powersopen </tt>in files <a href="#flat">cmbflat.f</a> and <a href="#open">cmbopen.f</a>
+for scalar modes and <tt>subroutine powertflat
+</tt>in file <a href="#flat">cmbflat.f</a>
+for tensor modes.</ul>
+Back to <a href="#start">Contents&nbsp;</a><!*******************************************************************>
+<hr>
+<p><a NAME="details"></a>
+<br><!********************************************************************>
+<hr>
+<br>&nbsp;
+<h1>
+Some details</h1>
+In this section we describe details of the code that the user may want
+to change. The list is by no means complete, we would appreciate any <a href="mailto:mzaldarriaga@cfa.harvard.edu,useljak@princeton.edu">coments
+or questions </a>which could help us improve it or enlarge it.
+<ul TYPE=square>
+<li>
+<b>l-sampling:</b></li>
+
+<br>The Cl spectra are calculated for only some values of l and the rest
+is computed by interpolation. The list of values of l being calculated
+is in <tt>subroutine initlval</tt> in the file <a href="#subrout">subroutines.f</a>.
+This list must be equal to the one in <a href="#jlgen">jlgen.f</a> that
+computes the tables of spherical Bessel functions.
+<li>
+<b>source k-sampling:</b></li>
+
+<br>The values of k where the sources are computed are stored in the <tt>ak0</tt>
+array set in <tt>subroutine cmbflat</tt> and
+<tt>subroutine cmbopen</tt>
+in files <a href="#flat">cmbflat.f</a> and
+<a href="#open">cmbopen.f</a>.
+<li>
+<b>geometric term k-sampling:</b></li>
+
+<br>The values of k where the spherical \ ultraspherical Bessel functions
+are computed are stored in the <tt>ak1</tt> array set in <tt>subroutine
+cmbflat</tt> and
+<tt>subroutine cmbopen</tt> in files <a href="#flat">cmbflat.f</a>
+and <a href="#open">cmbopen.f</a>.
+<li>
+<b>time sampling:</b></li>
+
+<br>The values of the conformal time used in the line of sight integration
+are fixed in subroutines <tt>subroutine finithermo</tt> and
+<tt>subroutine
+oinithermo</tt> in files <a href="#flat">cmbflat.f</a> and <a href="#open">cmbopen.f</a>
+and stored in the array atau0. During decouping the spacing is linear and
+given by the minimum between the inverse of the maximun wavevector and
+some fraction of the conformal time at decoupling. After decoupling the
+timesteps are increased, and in the flat code they are spaced logarithmically.
+If an early reionization is requested there is another refinement in the
+timesteps during the second peak of the visibility function with linear
+steps in time. All changes in the time sampling should be done in these
+two subroutines.
+<li>
+<b>number of photon moments in the hierarchy:</b></li>
+
+<br>The Boltzmann hierarchy for the photons is truncated at l=8. This is
+set by <tt>parameter lmax0</tt> in <tt>subroutine cmbflat</tt> and
+<tt>subroutine
+finitial</tt> in file <a href="#flat">cmbflat.f</a> and <tt>subroutine
+cmbopen</tt> and
+<tt>subroutine oinitial</tt> in file <a href="#open">cmbopen.f</a>.
+<li>
+<b>number of massless neutrino moments in the hierarchy:</b></li>
+
+<br>The Boltzmann hierarchy for the massless neutrinos is truncated at
+l=7 or at l=25 depending on the accuracy required in the transfer functions
+at high k , k > 1 (h Mpc)^(-1), (this has no effect on the CMB spectrum).
+The number of moments in highest accuracy mode is set by <tt>parameter
+lmaxnr0</tt> in <tt>subroutine cmbflat</tt> and
+<tt>subroutine finitial</tt>
+in file <a href="#flat">cmbflat.f</a> and <tt>subroutine cmbopen</tt> and
+<tt>subroutine
+oinitial</tt> in file <a href="#open">cmbopen.f</a>. In the l=7 mode the
+number of moments is set by lm2.
+<li>
+<b>number of massive neutrino moments in the hierarchy:</b></li>
+
+<br>The Boltzmann hierarchy for the massive neutrinos is truncated at l=4
+or at l=25 depending on the accuracy required in the transfer functions
+at high k, k > 1 (h Mpc)^(-1) (this has no effect on the CMB spectrum).
+The number of moments in highest accuracy mode is set by <tt>parameter
+lmaxnu0 </tt>in <tt>subroutine cmbflat</tt>, <tt>subroutine fderivs</tt>
+and
+<tt>subroutine finitial</tt> in file <a href="#flat">cmbflat.f</a>.
+In the l=4 mode the number of moments is set by lm3. Massive neutrinos
+have not been implemented in the open universe code.
+<li>
+<b>number of momentum modes in massive neutrino calculation:</b></li>
+
+<br>The Boltzmann hierarchy for the massive neutrinos depends also on the
+neutrino momentum. A grid in momentum is used, the number of momenta is
+set by <tt>nqmax0</tt> in <tt>subroutine cmbflat</tt>, <tt>subroutine fderivs
+</tt>,
+<tt>subroutine
+fderivst</tt> and
+<tt>subroutine finitial</tt> in file <a href="#flat">cmbflat.f</a>.
+Massive neutrinos have not been implemented in the open universe code.</ul>
+Back to <a href="#start">Contents&nbsp;</a><!*******************************************************************>
+<hr>
+</body>
+</html>

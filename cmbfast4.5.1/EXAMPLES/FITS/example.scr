@@ -1,0 +1,66 @@
+#!/bin/csh
+### 
+### This script computes an example of how to run 
+### CMBFAST and get a cl file which is in fits format 
+### to generate a map.
+
+
+set THISDIR=`pwd`
+set CODEDIR = $THISDIR/../..
+
+##
+## Bessel function files should have been created before running this  
+## script. 
+##
+
+set JLFILE = $CODEDIR/jl.dat
+set UJLFILE = $CODEDIR/ujl.dat
+
+##
+## Gotos to run parts of the script
+##
+
+#goto high
+#goto low
+
+initialize:
+
+
+##
+## Directory with CODE
+## Make sure the code was compiled using 
+## configure --with-fits=yes
+## make
+##
+
+cd $CODEDIR
+make tidy
+configure --with-fits=yes
+make 
+cd $THISDIR
+
+ln -s $JLFILE .
+
+##
+## Compute Cls
+##
+
+cls:
+
+time $CODEDIR/cmb < lcdm_fits.in
+
+##
+## make maps
+## Assume Healpix is installed
+
+synfast syn.par
+map2gif -inp maps_lcdm.fits -out maps_lcdm.gif
+
+
+clean:
+
+rm -f jl.dat
+
+
+
+

@@ -1,0 +1,142 @@
+This directory contains an example of how to use the new K-splitting
+feature of CMBFAST.
+
+The files in this directory were created using the example script
+example.scr.  It should be easy to follow what is going on.
+
+Basically a lambda, an open and a closed model are calculated in two
+different ways, with CMBFAST from scratch and using the K splitting
+techinique. For the low k model the three models are run again but up
+to a lower k. For the high k modes a flat, omega=1 model is
+calculated.  This omega=1 model is shifted using the angular diameter
+distances of each model, which is printed on top of the cl file for
+high and low k models.
+
+A very important point is that for the K splitting method to work COBE
+normalization has to be commented out from CMBFAST. This is done by
+creating the appropriate Makefile using configure --with-cobe=no and
+typing make.
+
+When the --with-cobe=no option is used another code, ksplit will be
+generated from ksplit.f. This code calls cmbfast twice, once for the
+high k modes (using a flat model to compute them) and once for the low
+k modes. It takes as imput lmax and ktaumax of the high k model.
+This model will be shifted around in l when the combined cl 
+is computed so the final maximum l will be
+different from what is entered here (it will be equal to the
+lmax entered times the ratio of angular diameter distances of the flat
+and full models used to compute the combined spectra).
+The cosmological parameters parameters  
+tau, Omega_k, Omega_v, omega_dm, omega_b, f_nu, ns
+as decribed in Tegmark and Zaldarriaga 2000. Little omegas are 
+omega=Omega h^2.
+
+For amusement purposes each time cmbfast is called from k split it
+will print
+
+ 	print *,'CMBFAST called with...'
+	write(*,'(1f6.1,1i5,2i4,99f8.3)'), ketamax, lmax, type, slopes, tau, 
+     &		Omega_k, Omega_v, Omega_c, Omega_b, Omega_n, h
+
+
+As output ksplit will generate cl_low.dat, cl_high.dat and
+cl_combine.dat (the low k, high k and combined results).
+
+Here is part of the example.scr script with some 
+explanations in capital letters:
+ 
+##
+## First run full calculation for examples
+## The .in files contain the inputs to CMBFAST
+## this is the usual cmbfast calculation.
+
+full:
+
+time $CODEDIR/cmb < lcdm.in
+time $CODEDIR/cmb < lcdm_tau.in
+time $CODEDIR/cmb < ocdm.in
+time $CODEDIR/cmb < ccdm.in
+
+NOW WE COMPUTE THE HIGH KS IN A FLAT OMEGA = 1
+MODEL AND THE LOW KS FOR EACH OF THE MODELS
+SEPARATELY. THE .in  FILES NOW TELL CMBFAST TO COMPUTE EITHER ONLY
+THE LOW KS OR THE HIGH KS. THIS IS DONE IN THROUGH THE QUESTION THAT
+ASKS IF EITHER SCALAR OR TENSOR CALCULATION SHOULD BE DONE. NOW 
+THERE ARE 2 ADDITIONAL OPTIONS, HIGH K SCALAR AND LOW K SCALAR
+CALCULATION.  
+
+##
+## Now compute compute high l in a model with
+## no lambda and no curvature
+##
+
+high:
+time $CODEDIR/cmb < high.in
+
+##
+## Now compute compute low l for both models 
+##
+
+low:
+
+time $CODEDIR/cmb < lcdm_low.in
+time $CODEDIR/cmb < ocdm_low.in
+time $CODEDIR/cmb < ccdm_low.in
+
+NOTE THAT ON TOP OF THE OUTPUT FILES WE NOW PRINT THE DISTANCE TO THE
+LAST SCATTERING SURFACE IN EACH MODEL. THIS IS NECESSARY TO BE ABLE TO
+SHIFT THE SPECTRA TO THE CORRECT l POSITION. THESE EXAMPLES HAVE
+TAU=0, IF A MODEL WITH TAU DIFFERENT FROM 0 IS BEING CALCULATED THE
+HIGH K CALCULATION HAS TO BE MULTIPLIED BY e^{-2\tau} (I am assuming
+that all the high k models were calculated with tau=0). THE LOW K CLS
+HAVE TO BE CACULATED WITH THE CORRECT TAU. 
+
+plot:
+
+THIS SM (SUPERMONGO) SCRIPT IS MAKING THE COMPARISON 
+BETWEEN THE MODELS. IT SHOULD BE SIMPLE TO UNDERSTAND EVEN IF YOU 
+DO NOT KNOW SM. YOU WILL FIND HOW WE SHIFTED THE SPECTRA IN l
+SPACE. 
+
+sm < plots.sm 
+
+############# ksplit wraper ######
+
+ksplit:
+
+time $CODEDIR/ksplit < ksplit_lcdm.in
+
+USES THE KSPLIT PROGRAM TO COMPUTE THIS MODEL
+
+plotksplit:
+
+sm < plot_ksplit.sm
+
+GENERATES SOME COMPARISON PLOTS.
+
+######################################################################
+
+THESE ARE SOME TIMING RESULTS ON PC WITH G77. THE ONLY POINT IS TO
+NOTE THE BIG TIME SAVINGS OF CALCULATING THINGS THIS WAY. NOTE ALSO
+THAT THE HIGH K CALCULATION CAN BE "RECYCLED" FOR MANY MODELS, SO THIS
+IS VERY USEFUL TO MAKE GRIDS OF MODELS.   
+
+################ TIMING #####################
+
+###
+### Timing results in seconds (in a PC running linux)
+###
+### LCDM (FULL)  12.570 
+### OCDM (FULL) 127.080 
+### CCDM (FULL) 189.250 
+### HIGH         11.310
+### LCDM (LOW)    5.010 
+### OCDM (LOW)   11.130 
+### CCDM (LOW)   13.300 
+
+##
+## Clearly even for one model it is significantly faster to 
+## do the k split. It makes even more sense when making grids of models.
+##
+
+

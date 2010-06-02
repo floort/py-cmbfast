@@ -1,0 +1,294 @@
+#!/bin/sh
+
+ECHO () {
+    if [ "`uname -s`" = "Linux" ]; then
+	echo -n "$*"
+    else
+	echo "$*\c"
+    fi
+}
+
+help () {
+    cat <<EOF
+
+  usage: configure [options]
+
+  valid options are:
+
+  --with-cobe=yes, --with-cobe=no:
+    compile with (default) or without COBE normalization
+    without COBE the code is normalized to zeta=1 for scalars 
+    and h=1 for tensors (so that in inflation P_h/P_zeta=16epsilon)
+
+  --with-oldnorm=yes, --with-oldnorm=no:
+    uses the old definitions of power spectra and initial conditions 
+    instead of the new zeta=1 &  P_h/P_zeta=16epsilon convention 
+    
+  --with-hacc=yes, --with-hacc=no  
+    compile without (default) or with high accuracy
+
+  --with-ksplit=yes, --with-ksplit=no:
+    compile without (default) or with ksplit
+
+  --with-lyaout=yes, --with-lyaout=no:
+    compile without (default) or with output for ly-a forest 
+    analysis (track of hubble constant, growth factor etc.)
+
+  --with-hispdhikmodes=yes, --with-hispdhikmodes=no:
+    compile without (default) or with speeding up of calculation
+    of the transfer functions for k>1 using the growth factor
+
+  --with-iargc=yes, --with-iargc=no:
+    compile with or without (default) command-line argument support
+
+  --with-fits=yes, --with-fits=no:
+    compile with or without (default) FITS (flexible image transport
+    system) file support
+    this requires the cfitsio library
+  
+  --with-5dim=yes, --with-5dim=no
+    compile with or without(default)the option of a fifth dimension 
+    
+  --with-mpi=yes, --with-mpi=no
+    compile with or without (default) parallel MPI
+
+  --fits-path=[full path to cfitsio library]
+    supply location of cfitsio library (not required if cfitsio library
+    is in standard library path, i.e. /usr/lib or /usr/local/lib)
+
+  --f77=[F77 compiler]
+    supply non-standard name of Fortran 77 compiler
+
+  --f77-flags=[F77 compiler flags]
+    supply user-defined flags to Fortran 77 compiler
+
+  --max=yes, --max=no
+    Internal option not valid in the public release. 
+ 
+EOF
+    exit
+}
+
+setDefaults () {
+    FC="f77"
+    FFLAGS="-O2"
+
+    LDFLAGS=""
+    OBJMPI=""
+    FITSOUT=""
+
+    LYAOUT="-DLYAOUTPUTS"
+    HISPDHIKMODE="-DHISPDHIKMODES"
+    IARGC="-DIARGC"
+    FITS="-DFITS"
+    MAX="-DMAX"
+    NORM="-DUNNORM"
+    DIM="-DDIM"    
+    MPI="-DMPIBUILD"    
+    HA="-DHP"
+    ON="-DOLDNORM"
+
+    case `uname -s` in
+	SunOS*)
+	    FFLAGS="-O2";;
+	AIX*)
+	    FFLAGS="-O -qmaxmem=-1"
+	    IARGC="-WF,${IARGC}"
+	    FITS="-WF,${FITS}"
+	    MAX="-WF,${MAX}"
+	    NORM="-WF,${NORM}"
+            DIM="-WF,${DIM}"
+            MPI="-WF,${MPI}"
+	    HA="-WF,${HA}"
+	    ON="-WF,${ON}";;
+        IRIX*)
+            FFLAGS="-Ofast=`uname -m`";;
+	Linux*)
+	    FC="g77";;
+    esac
+
+    fits=0
+    lyas=0
+    hispdhikmodes=0
+    ksplit=0
+    iarg=0
+    cobe=0
+    cobe=1
+    max=0
+    quint=0
+    dim=0
+    mpi=0
+    hacc=0
+    oldn=0
+    flib="/usr/lib /usr/local/lib"
+}
+
+readArgs () {
+    while [ $# -gt 0 ]; do
+	arg=$1
+	case $arg in
+	--with-iargc=*)
+	    [ "`echo $arg | cut -d= -f 2`" = "yes" ] && iarg=1;;
+	--with-fits=*)
+	    [ "`echo $arg | cut -d= -f 2`" = "yes" ] && fits=1;;
+	--with-ksplit=*)
+	    [ "`echo $arg | cut -d= -f 2`" = "yes" ] && ksplit=1 cobe=0 oldn=1;;
+	--with-cobe=*)
+	    [ "`echo $arg | cut -d= -f 2`" = "no" ] && cobe=0;;
+	--with-lyaout=*)
+	    [ "`echo $arg | cut -d= -f 2`" = "yes" ] && lyas=1;;
+	--with-hispdhikmodes=*)
+	    [ "`echo $arg | cut -d= -f 2`" = "yes" ] && hispdhikmodes=1;;
+	--max=*)
+	    [ "`echo $arg | cut -d= -f 2`" = "yes" ] && max=1 cobe=0;;
+	--with-mpi=*)
+	    [ "`echo $arg | cut -d= -f 2`" = "yes" ] && mpi=1;;   
+	--with-hacc=*)
+	    [ "`echo $arg | cut -d= -f 2`" = "yes" ] && hacc=1;;   
+	--with-oldnorm=*)
+	    [ "`echo $arg | cut -d= -f 2`" = "yes" ] && oldn=1;;   
+	--with-5dim=*)
+	    [ "`echo $arg | cut -d= -f 2`" = "yes" ] && dim=1;;        
+	--fits-path=*)
+	    flib=`echo $arg | cut -d= -f 2`;;
+	--f77=*)
+	    FC=`echo $arg | cut -d= -f 2`;;
+	--f77-flags=*)
+	    FFLAGS=`echo $arg | cut -d= -f 2`;;
+	--help*)
+	    help;;
+	*)
+	    echo "Warning: Unsupported option $arg ignored.";;
+	esac
+	shift
+    done
+}
+
+checkFC () {
+    ECHO "checking for F77 compiler... "
+    if [ ! -x "`which ${FC}`" ]; then
+	echo "no"
+	echo "Error: F77 compiler (${FC}) not found".
+	exit
+    else
+	echo "yes"
+    fi
+}
+
+checkIARGC () {
+    if [ $iarg -eq 1 ]; then
+	ECHO "checking for IARGC support... "
+	cat <<EOF > /tmp/t.f
+      program main
+      print *, iargc()
+      end
+EOF
+	${FC} -o /tmp/t.x /tmp/t.f > /dev/null 2>&1
+	stat=$?
+	if [ $stat -ne 0 ]; then
+	    echo "no"
+	else
+	    echo "yes"
+	    FFLAGS="${FFLAGS} ${IARGC}"
+	fi
+	# rm -f /tmp/t.f /tmp/t.x
+    fi
+}
+
+checkFITS () {
+    if [ $fits -eq 1 ]; then
+	ECHO "checking for cfitsio library... "
+	for FITSDIR in $flib; do
+	    FITSLIB=`ls -1 ${FITSDIR} | grep cfitsio.a | head -1`
+	done
+	if [ "x${FITSLIB}" = "x" ]; then
+	    echo "Warning: cfitsio library not found."
+	    echo "Switching off FITS support."
+	else
+	    echo "using ${FITSDIR}/${FITSLIB}"
+	    FITSLIB=`basename $FITSLIB ".a" | sed 's/^lib//'`
+	    FFLAGS="${FFLAGS} ${FITS}"
+	    LDFLAGS="-L${FITSDIR} -l${FITSLIB}"
+	    case `uname -s` in
+		SunOS*)
+		LDFLAGS="$LDFLAGS -lm -lnsl -lsocket";;
+	    esac
+	    FITSOUT="fitsout.o"
+	fi
+    fi
+}
+
+checkMAX (){
+    # For internal use only. Sets the relevant 
+    # flags so that code outputs info needed
+    # for parameter project.
+    if [ ! -r Makefile_max.in ]; then
+	max=0
+    fi	
+    if [ $max -eq 1 ]; then
+	FFLAGS="${FFLAGS} ${MAX}" 
+
+    fi
+}
+
+checkMPI () {
+if [ $mpi -eq 1 ]; then
+
+	FFLAGS="${FFLAGS} ${MPI}"
+	OBJMPI="mpisub.o"
+	#[ $mpi -eq 1 ] && FC="hf77" PG compiler needed
+	CMBMPIDISTRIBUTE="cd RUN; make; cd .."
+	(cd RUN; make install; cd ..)
+
+fi
+}
+
+changeMakefile () {
+    [ -r Makefile ] && mv Makefile Makefile.bak
+    cat Makefile.in |\
+	sed "s|^FC.*$|FC	= $FC|" |\
+	sed "s|^FFLAGS.*$|FFLAGS	= $FFLAGS|" |\
+	sed "s|^LDFLAGS.*$|LDFLAGS	= $LDFLAGS|" |\
+	sed "s|^OBJQ.*$|OBJQ	        = $OBJQ|" |\
+	sed "s|^FITSOUT.*$|FITSOUT	= $FITSOUT|" |\
+	sed "s|\#some mpi is put here in configure step|	$CMBMPIDISTRIBUTE|" |\
+	sed "s|^OBJMPI.*$|OBJMPI	= $OBJMPI|" > Makefile
+    if [ $max -eq 1 ]; then 
+	cat Makefile_max.in >> Makefile
+	mv Makefile qaz_Make
+	cat qaz_Make |\
+	    sed "s|default:|default: max|" |\
+	    sed "s|tidy:|tidy: tidymax|"  > Makefile 
+	rm -f qaz_Make
+    fi
+
+    if [ $ksplit -eq 1 ]; then
+	cat Makefile_ksplit.in >> Makefile
+	mv Makefile qaz_Make
+	cat qaz_Make |\
+            sed "s|default:|default: ksplit|" > Makefile
+	rm -f qaz_Make
+    fi
+}
+
+setDefaults
+readArgs $*
+[ $cobe -eq 0 ] && FFLAGS="${FFLAGS} ${NORM}"
+[ $dim -eq 1 ] && FFLAGS="${FFLAGS} ${DIM}"
+[ $lyas -eq 1 ] && FFLAGS="${FFLAGS} ${LYAOUT}"
+[ $hispdhikmodes -eq 1 ] && FFLAGS="${FFLAGS} ${HISPDHIKMODE}"
+[ $hacc -eq 1 ] && FFLAGS="${FFLAGS} ${HA}"
+[ $oldn -eq 1 ] && FFLAGS="${FFLAGS} ${ON}"
+
+checkFC
+checkIARGC
+checkFITS
+checkMAX
+checkMPI
+changeMakefile
+
+echo "Configuration complete. Now run make to compile."
+
+
+
+

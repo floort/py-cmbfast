@@ -1,0 +1,86 @@
+set h=$2
+set n=$3
+set alpha=$4
+set d2norm=$5
+set ak=akh*h
+## Should be the same formula as in powersflat
+set aknlog=ln(ak*100.0d0/0.05)
+set apower=exp((n-1)*aknlog+0.5*alpha*aknlog**2)
+set delta2=ak*ak*ak*ak*tf*tf*apower*d2norm
+set akh=lg(akh)
+set delta2=lg(delta2)
+connect akh delta2
+poorsigma8 akh delta2
+}
+macro deltacobeno 5 {
+ltype 0
+echo UNNORM plot
+echo TF file .... $1
+echo h .......... $2
+echo n .......... $3
+echo alpha ...... $4
+echo norm ....... $5
+data $1
+read akh 1
+read tf 2
+set h=$2
+set n=$3
+set alpha=$4
+set d2norm=$5
+set ak=akh*h
+## Should be the same formula as in powersflat
+set aknlog=ln(ak*100.0d0/0.05)
+set apower=exp((n-1)*aknlog+0.5*alpha*aknlog**2)
+set delta2=ak*ak*ak*ak*tf*tf*apower*d2norm
+set akh=lg(akh)
+set delta2=lg(delta2)
+connect akh delta2
+poorsigma8 akh delta2
+}
+macro clcobeyes 1 {
+echo Cl NORM
+echo file ...... $1
+data $1
+read l 1
+read cl 2
+set l=lg(l)
+set cl=cl*(2.726e6)**2
+connect l cl
+}
+macro clcobeno 2 {
+echo Cl UNNORM
+echo file ...... $1
+echo norm ...... $2
+data $1
+read l 1
+read cl 2
+set norm=$2
+set l=lg(l)
+set cl=cl*(2.726e6)**2*norm
+connect l cl
+}
+##########################################################################
+device postfile plots_tf.ps
+erase
+ctype default
+window 1 2 1 2
+limits 0 3.5 0 7500
+ticksize -1 0 0 0
+box
+xlabel l
+ylabel l(l+1)C_l/2\pi [\mu K^2]
+clcobeyes cl.lcdm_norm
+ctype green
+clcobeno cl.lcdm_unnorm 2.23d-9
+ctype default
+window 1 2 1 1
+limits -3 1 -4 1.5
+ticksize -1 0 -1 0
+box
+xlabel k[hMpc^{-1}]
+ylabel \Delta^2_{dm}
+ctype default
+deltacobeyes lcdm_matter_tfcmb.dat 0.65 1 0 2.2357586364574D-09
+ctype green
+deltacobeno lcdm_matter_tfcmb.dat 0.65 1 0 2.5d-9
+QUIT

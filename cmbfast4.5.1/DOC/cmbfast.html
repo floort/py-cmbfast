@@ -1,0 +1,217 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.72 [en] (X11; U; Linux 2.2.14-6.1.1smp i686) [Netscape]">
+   <title>CMBFAST</title>
+</head>
+<body bgcolor="#FFFFFF" background="pa01.jpg">
+<a NAME="start"></a>
+<center>
+<h1>
+<img SRC="cmbfast_tr.gif" ALT="*" ></h1></center>
+CMBFAST:
+<p>A Microwave Anisotropy Code.
+<i><font color="#FF00FF"><font size=+2>Last
+updated 2<b>/18/03</b>.</font></font></i>
+<p>
+<hr>
+<h1>
+<font color="#FF0000">W e l c o m e </font>to the <font size=+2>CMBFAST</font>
+Website!</h1>
+This is the most extensively used code for computing cosmic microwave background
+anisotropy, polarization and matter power spectra. The code has been tested
+over a wide range of cosmological parameters. We are continuously testing
+and updating the code based on suggestions from the cosmological community.
+Do not hesitate to contact us if you have any questions or suggestions.
+<p><i>U. Seljak &amp; M. Zaldarriaga</i>
+<p>
+<hr>
+<br><img SRC="new.gif" ALT="*" ><font color="#008000"><font size=+2>&nbsp;
+Current Version <b>4.2&nbsp; </b></font></font>More details on the differences
+with previous versions can be found in the <a href="online.html">documentation
+section </a>. <font color="#000000">This version has several new features.
+
+<ul>
+<li>
+Its accuracy has been improved to be below the sampling variance up to 
+l=3000 (over most of the range it is around 0.1% on unlensed Cls and even 
+better on transfer functions). This is valid at and around the WMAP model 
+assuming flat geometry.
+</li>
+
+<li> New models have been added: dark energy/quintessence, 
+more general form of primordial power spectrum shape, warm dark matter and 
+5-dimensional model.
+</li>
+
+<li>
+A parallel LAM/MPI version has been developed. 
+</li>
+
+<li> New compiler options have been introduced and the 
+normalization has been changed to simplify the comparison to 
+inflationary literature.
+</li>
+</ul>
+
+</font>
+<p>
+<hr>
+<p>The CMBFAST package is available as a <a href="cmbfast.tar.gz">compressed
+tar file.</a> 
+You can download a subroutine to calculate the
+<a href="harmonics.f.gz">spin
+harmonics</a> needed in for the analysis of CMB polarization. You can also
+find:
+<li>
+<a href="#papers">Publications</a></li>
+
+<br>&nbsp;
+<p>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<li>
+<a href="online.html">some on-line documentation.</a></li>
+
+<br>&nbsp;
+<p>&nbsp;
+<p><font size=+2>Information about the authors.</font>
+<li>
+<a href="http://feynman.princeton.edu/~uros/index.html">Uros Seljak</a></li>
+
+<br>&nbsp;
+<p>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<li>
+<a href="http://www.sns.ias.edu/~matiasz">Matias Zaldarriaga</a></li>
+
+<br>&nbsp;
+<p>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<li>
+If you are interested in making CMB maps you can use the publically available
+<a href="http://www.tac.dk/~healpix/">HEALPIX</a>.
+</li>
+
+<li>
+The UCSB Physics department CMB curriculum <a href="http://www.physics.ucsb.edu/~jatila/raap/cmb_edu.html">home
+page</a>.
+You will find a windows version of CMBFAST among other cool stuff.</li>
+
+<li>
+WMAP team has a web based <a href="http://lambda.gsfc.nasa.gov/cgi-bin/cmbfast_form.pl"
+interface </a> to run CMBFAST 4.0.
+
+<li>
+If you are interested in fitting models to CMB data check Lloyd Knox's
+<a href="http://flight.uchicago.edu/knox/radpack.html">RADPACK</a>
+.</li>
+
+<li>
+Other CMB <a href="http://physics7.berkeley.edu/cmbserve/resources.html">websites.</a></li>
+
+<br>&nbsp;
+<p>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<p><a NAME="papers"></a><!*********************************************************>
+<hr>
+<br>&nbsp;
+<br>&nbsp;
+<h1>
+Publications</h1>
+
+<h2>
+Papers in postscript (compressed using
+<a href="http://www.cs.pdx.edu/~trent/gnu/">GNU</a>
+gzip)</h2>
+
+<p><br>&nbsp;<a href="http://xxx.lanl.gov/astro-ph/0008167">astro-ph/0008167</a>
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i>Towards a refined
+cosmic concordance model: joint 11-parameter constraints from CMB and large-scale</i>
+<br><i>structure </i>M. Tegmark, M.&nbsp; Zaldarriaga, A. J. S. Hamilton.
+In a section of this paper we discuss the k-splitting method implemented
+in version 4.0<a href="http://xxx.lanl.gov/astro-ph/9912199"></a>
+<p><a href="http://xxx.lanl.gov/astro-ph/9912199">astro-ph/9912199</a>&nbsp;
+(ApJ Supplements in press)
+<br><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CMBFAST for spatially
+closed universes</i> by M. Zaldarriaga and U. Seljak.
+<br>We extend CMBFAST to closed models.
+<dl>
+<dt>
+<a href="http://xxx.lanl.gov/ps/astro-ph/9803150">Phys.Rev.D:58 023003
+(1998)</a></dt>
+
+<dd>
+<i>Gravitational Lensing effect on Cosmic Microwave Background Polarization</i>
+by M. Zaldarriaga, U. Seljak.</dd>
+
+<br>We develop the necessary formalism to calculate the gravitational lensing
+effect on the power spectra.
+<dt>
+<a href="http://xxx.lanl.gov/ps/astro-ph/9709066">Phys.Rev.D:573290-3301,1998</a></dt>
+
+<dd>
+<i>A Complete Treatment of CMB Anisotropies in a FRW Universe</i> by W.
+Hu, U. Seljak, M. White, M. Zaldarriaga.</dd>
+
+<br>The total angular momentum method is generalized to non-flat geometries.
+The equations for tensor and vector modes in non-flat geometries follow
+inmediately.
+<dt>
+<a href="http://xxx.lanl.gov/ps/astro-ph/9704265">ApJ 494:491-502, 1998</a></dt>
+
+<dd>
+<i>Integral Solution for the Microwave Background Anisotropies in Non-flat
+Universes </i>by M. Zaldarriaga, U. Seljak &amp; E. Bertschinger.</dd>
+
+<br>We extend the line of sight approach for solving the photon transport
+equation to non-flat universes. We also generalize the E &amp; B decomposition
+of polarization to open models.
+<dt>
+<a href="http://xxx.lanl.gov/ps/astro-ph/9609169">Phys.Rev.Lett.78:2054-2057,1997</a></dt>
+
+<dd>
+<i>Signature of Gravity Waves in Polarization of the Microwave Background
+</i>by
+U. Seljak &amp; M. Zaldarriaga.</dd>
+
+<br>Gravity waves leave a characteristic signature in polarization of the
+CMB. A particular combination of the Stokes parameters vanishes for scalar
+modes, but does not for GW. We investigate how this can be used to constrain
+the presence of GW in the light of the future CMB experiments.
+<dt>
+<a href="http://xxx.lanl.gov/ps/astro-ph/9609170">Phys.Rev.D:1830-1840,1997</a></dt>
+
+<dd>
+<i>An All-Sky Analysis of Polarization in the Microwave Background
+</i>by
+M. Zaldarriaga &amp; U. Seljak.</dd>
+
+<br>We use spin-weighted spherical harmonics to expand the CMB polarization
+on the sky. We derive the exact expressions for scalar and tensor power
+spectra needed to characterize the CMB anisotropy and polarization.
+<dt>
+<a href="psfiles/cmbfast1.ps.gz">ApJ 469:437-444,1996</a></dt>
+
+<dd>
+<i>A line of sight approach to Cosmic Microwave Background anisotropies
+</i>by
+U. Seljak &amp; M. Zaldarriaga.</dd>
+
+<br>This is the main reference describing the line of sight integration
+method. It explains our numerical implementation of the integral solution
+for CMB temperature anisotropies and polarization.
+<br>&nbsp;</dl>
+
+<hr>
+<p>Back to
+<b><a href="#start">CMBFAST</a></b><!*******************************************************************>
+</body>
+</html>

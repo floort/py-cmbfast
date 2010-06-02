@@ -1,0 +1,46 @@
+# -----------------------------------------------------------------
+# CMBfast Makefile template
+# used by configure to create Makefile
+# -----------------------------------------------------------------
+
+SHELL	= /bin/sh
+
+FC	= f77
+FFLAGS	= -O2
+LDFLAGS	=
+FITSOUT	=
+
+dverk	= dverk.o
+OBJTAB	= jlens.o jlgen.o ujlgen.o
+OBJMPI  = 
+OBJCMB	= cmbflat.o cmbopen.o driver.o lensing.o \
+	subroutines.o params.o recfast.o $(FITSOUT) $(OBJMPI)
+
+
+incfast	= cmbfast.inc
+incpara	= cmbpar.inc
+inclval = lvalues.inc
+
+default: jlgen ujlgen jlens cmb 
+
+cmb: $(OBJCMB) $(dverk)
+	$(FC) $(FFLAGS) -o $@ $(OBJCMB) $(dverk) $(LDFLAGS)
+	#some mpi is put here in configure step
+
+ujlgen: ujlgen.o
+	$(FC) $(FFLAGS) -o $@ ujlgen.o
+
+jlgen: jlgen.o
+	$(FC) $(FFLAGS) -o $@ jlgen.o
+
+jlens: jlens.o
+	$(FC) $(FFLAGS) -o $@ jlens.o
+
+$(OBJTAB): $(incfast) $(inclval)
+$(OBJCMB): $(incfast) $(incpara) $(inclval)
+
+clean:
+	-rm -f *.o
+tidy: clean
+	-rm -f jlgen ujlgen jlens cmb ksplit
+	-rm -f Makefile Makefile.bak

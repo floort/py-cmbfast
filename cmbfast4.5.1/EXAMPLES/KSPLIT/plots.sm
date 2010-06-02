@@ -1,0 +1,214 @@
+macro initialize {
+## Initializes sm for usual plots
+   erase
+   ctype black
+   window 1 1 1 1
+   LOCATION 8000 31500 4000 31500
+   ticksize 0 0 0 0
+   expand 2
+   lweight 2 }
+
+
+### Read in high model
+data cl.high
+lines 3 3
+read highdlss 1
+lines 4 1502
+read lhigh 1
+read clhigh 2
+
+### LCDM
+
+# Full
+data cl.lcdm
+read lfull 1
+read lcdmf 2
+
+# Low 
+data cl.lcdm_low
+lines 3 3
+read lcdmdlss 1
+lines 4 502
+read lcdml 2
+
+## Shift lhigh
+set lhighlcdm=lhigh*lcdmdlss/highdlss
+spline lhighlcdm clhigh lfull lcdmh
+set dimen(temp0)=1000
+set lcdml = lcdml concat temp0
+
+set lcdmcombine=lcdmh+lcdml
+spline lfull lcdmcombine lhighlcdm lcdm
+spline lfull lcdmf lhighlcdm flcdm
+set lcdmrel=(lcdm-flcdm)/flcdm
+
+### OCDM
+
+# Full
+data cl.ocdm
+read ocdmf 2
+
+# Low 
+data cl.ocdm_low
+lines 3 3
+read ocdmdlss 1
+lines 4 502
+read ocdml 2
+
+## Shift lhigh
+set lhighocdm=lhigh*ocdmdlss/highdlss
+spline lhighocdm clhigh lfull ocdmh
+set dimen(temp0)=1000
+set ocdml = ocdml concat temp0
+
+set ocdmcombine=ocdml+ocdmh
+set ocdmrel=(ocdmcombine-ocdmf)/ocdmf
+
+### CCDM
+
+# Full
+data cl.ccdm
+read ccdmf 2
+
+# Low 
+data cl.ccdm_low
+lines 3 3
+read ccdmdlss 1
+lines 4 502
+read ccdml 2
+read llow 1
+
+## Shift lhigh
+set lhighccdm=lhigh*ccdmdlss/highdlss
+spline lhighccdm clhigh lfull ccdmh
+set dimen(temp0)=1000
+set ccdml = ccdml concat temp0
+
+set ccdmcombine=ccdml+ccdmh
+spline lfull ccdmcombine lhighccdm ccdm
+spline lfull ccdmf lhighccdm fccdm
+set ccdmrel=(ccdm-fccdm)/fccdm
+
+
+set lfull=lg(lfull)
+set lhighccdm=lg(lhighccdm)
+set lhighlcdm=lg(lhighlcdm)
+set lhighocdm=lg(lhighocdm)
+
+######### Plot 1 ###############################
+
+device postfile compare.ps
+
+lweight 4
+
+window 1 -3 1 3
+ctype black
+limits 0 3.6 0 9000
+ticksize -1 0 0 0
+box 0 2 0 0
+#xlabel l
+rel 0.2 7000
+label LCDM
+
+ltype 3
+lweight 4
+ctype red
+connect lhighlcdm clhigh
+connect lfull lcdml
+ltype 2
+ctype green
+lweight 11
+connect lhighlcdm lcdm
+ltype 0
+lweight 3
+ctype black 
+connect lfull lcdmf
+lweight 4 
+
+window 1 -3 1 1
+ctype black
+limits 0 3.6 0 9000
+ticksize -1 0 0 0
+box
+xlabel l
+rel 0.2 7000
+label CCDM
+
+ltype 3
+lweight 4
+ctype red
+connect lhighccdm clhigh
+connect lfull ccdml
+ltype 3
+lweight 11
+ctype green
+connect lhighccdm ccdm
+ltype 0
+lweight 3
+ctype black
+connect lfull ccdmf
+lweight 4 
+ 
+window 1 -3 1 2
+ctype black
+limits 0 3.6 0 9000
+ticksize -1 0 0 0
+box 0 2 0 0
+#xlabel l
+rel 0.2 7000
+label OCDM
+
+lweight 4
+ltype 3
+ctype red
+connect lhighocdm clhigh
+connect lfull ocdml
+ltype 3
+lweight 11
+ctype green
+connect lfull ocdmcombine
+ltype 0
+lweight 3
+ctype black
+connect lfull ocdmf
+lweight 4 
+ 
+######### Plot 1 ###############################
+
+device postfile relative.ps
+
+lweight 4
+
+window 1 1 1 1
+ctype black
+limits 0 3.5 -.05 .05
+ticksize -1 0 0 0
+box
+xlabel l
+ylabel rel. err.
+
+ltype 0
+connect lhighlcdm lcdmrel 
+rel 0.1 0.04 
+draw 0.5 0.04
+rel 0.55 0.04
+label LCDM
+
+ltype 2
+ctype blue
+connect lhighocdm ocdmrel
+rel 0.1 0.03 
+draw 0.5 0.03
+rel 0.55 0.03
+label OCDM
+
+ltype 4
+ctype red
+connect lhighccdm ccdmrel
+rel 0.1 0.02
+draw 0.5 0.02
+rel 0.55 0.02
+label CCDM
+
+
+device null

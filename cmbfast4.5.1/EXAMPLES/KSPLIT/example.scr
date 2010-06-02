@@ -1,0 +1,110 @@
+#!/bin/csh
+### 
+### This script computes an example of the k-slipt speeding   
+### procedure. The outputs of the run are already included 
+### in this directory. This script is provided so that the user 
+### can see what was done in order to create those files.
+##
+## Directory with CODE
+
+set THISDIR=`pwd`
+set CODEDIR = $THISDIR/../..
+
+initialize:
+
+##
+## Bessel function files should have been created before running this  
+## script. 
+##
+
+set JLFILE = $CODEDIR/jl.dat
+set UJLFILE = $CODEDIR/ujl.dat
+
+ln -s $JLFILE .
+ln -s $UJLFILE .
+
+## Make sure the code was compiled using 
+## configure --with-cobe=no
+## make 
+## so that the spectra are not COBE normalized before output.
+##
+
+cd $CODEDIR 
+make tidy
+configure --with-cobe=no --with-ksplit=yes
+make
+cd $THISDIR
+##
+## Gotos to run parts of the script
+##
+
+#goto high
+#goto low
+
+##
+## First run full calculation for some examples
+##
+
+full:
+
+time $CODEDIR/cmb < lcdm.in
+time $CODEDIR/cmb < lcdm_tau.in
+time $CODEDIR/cmb < ocdm.in
+time $CODEDIR/cmb < ccdm.in
+
+##
+## Now compute compute high l in a model with
+## no lambda and no curvature
+##
+
+high:
+time $CODEDIR/cmb < high.in
+
+##
+## Now compute compute low l for both models 
+##
+
+low:
+
+time $CODEDIR/cmb < lcdm_low.in
+time $CODEDIR/cmb < ocdm_low.in
+time $CODEDIR/cmb < ccdm_low.in
+
+plot:
+
+sm < plots.sm 
+
+############# ksplit wraper ######
+
+ksplit:
+
+time $CODEDIR/ksplit < ksplit_lcdm.in
+
+plotksplit:
+
+sm < plot_ksplit.sm
+ 
+clean:
+
+rm jl.dat
+rm ujl.dat
+
+################ TIMING #####################
+
+###
+### Timing results in seconds (in a PC running linux)
+###
+### LCDM (FULL)  12.570 
+### OCDM (FULL) 127.080 
+### CCDM (FULL) 189.250 
+### HIGH         11.310
+### LCDM (LOW)    5.010 
+### OCDM (LOW)   11.130 
+### CCDM (LOW)   13.300 
+
+##
+## Clearly even for one model it is faster to do the k split. 
+## It even makes more sense when making grids.
+##
+
+
