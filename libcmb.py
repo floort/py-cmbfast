@@ -11,6 +11,8 @@ class cmb(object):
 		self.ict = 0
 		self.lmoin = 1500
 		self.akmax0 = 3000
+		
+		
 	def __setattr__(self, name, value):
 		"""Customize attribute asignment to guarantee sane values. 
 		"""
@@ -25,6 +27,8 @@ class cmb(object):
 			object.__setattr__(self, name, value)
 		else: # Default
 			object.__setattr__(self, name, value)
+			
+	# The subroutines.F functions and subroutines. 
 	def output(self, clts,cltt,cles,clet,clbt,clcs,clct,itflag,lmx):
 		pass
 	def COBEnormalize(self, clts,cltt,cles,clet,clbt,clcs,clct,clkk,cltk):
@@ -57,8 +61,23 @@ class cmb(object):
 		pass
 	def rombint(self, f,a,b,tol):
 		pass
-	def spline(self, x,y,n,yp1,ypn,y2):
-		pass
+	def spline(self, x,y,yp1,ypn):
+		if len(x) != len(y):
+			raise ValueError("x and y should be of the same length.")
+		l = len(x)
+		fn = c_int(l)
+		fx = (c_double * l)()
+		fy = (c_double * l)()
+		for i in xrange(l):
+			fx[i] = x[i]
+			fy[i] = y[i]
+		fn = c_int(l)
+		fyp1 = c_double(yp1)
+		fypn = c_double(ypn)
+		fy2 = (c_double * l)()
+		self.libcmb.spline_(fx, fy, byref(fn), byref(fyp1), byref(fypn), fy2)
+		return list(fy2)
+
 	def splint(self, y,z,n):
 		pass
 	def output_power(self, ntf,amnu):
@@ -94,5 +113,5 @@ class cmb(object):
 
 if __name__ == "__main__":
 	c = cmb()
-	print c.indexx([3.,2.,1.])
+	print c.spline([0.,1.], [0.,0.], 1., -1.)
 
