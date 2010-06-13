@@ -1,3 +1,4 @@
+all: libcmb libjlgen
 libcmb:
 	f77 -O2 -fPIC -c cmbfast4.5.1/cmbflat.F
 	f77 -O2 -fPIC -c cmbfast4.5.1/cmbopen.F
@@ -10,5 +11,10 @@ libcmb:
 	ld -L/usr/local/lib -lg2c -shared -soname libcmb.so.1 -o libcmb.so.1.0 \
 		cmbflat.o cmbopen.o driver.o lensing.o subroutines.o params.o \
 		recfast.o dverk.o
+libjlgen:
+	f77 -O2 -fPIC -c cmbfast4.5.1/jlgen.F
+	ld -L/usr/local/lib -lg2c -shared -soname libjlgen.so.1 -o libjlgen.so.1.0 \
+		jlgen.o
+    
 clean:
 	rm *.o
