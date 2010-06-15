@@ -1,16 +1,19 @@
 #!/usr/bin/env python
 
 from ctypes import *
+from struct import *
 
 
 class cmb(object):
-	def __init__(self, shared_object="./libcmb.so.1.0"):
-		self.libcmb = cdll.LoadLibrary(shared_object)
+	def __init__(self, libcmb="./libcmb.so.1.0", libjlgen="./libjlgen.so.1.0"):
+		self.libcmb = cdll.LoadLibrary(libcmb)
+		self.libjlgen = cdll.LoadLibrary(libjlgen)
 		
 		# Set default values
 		self.ict = 0
 		self.lmoin = 1500
 		self.akmax0 = 3000
+		self.l0max = 5300 # Use the same value as in cmbfast.inc
 		
 		
 	def __setattr__(self, name, value):
@@ -27,7 +30,23 @@ class cmb(object):
 			object.__setattr__(self, name, value)
 		else: # Default
 			object.__setattr__(self, name, value)
-			
+	
+	def _gen_fortran_block_(self, fmt, v):
+		""" A helper function to generate a fortran block when writing to file.
+		"""
+		header = pack("q", calcsize(fmt))
+		return header + pack(fmt, v) + header
+	
+	def jlgen(self, lmoin ,kmax0, filename=False):
+		if lmoin + 300 > self.l0max:
+			raise ValueError("lmoin should be less than %s." % (self.l0max-299))
+		self.libjlgen.initlval_(byref(c_int(lmoin)))
+		if filename:
+			f = open(filename, "wb")
+		else: # Use auto filename
+			f = open("jl%dx%d.dat" % (lmoin, kmax0), "wb")
+		
+	
 	# The subroutines.F functions and subroutines. 
 	def output(self, clts,cltt,cles,clet,clbt,clcs,clct,itflag,lmx):
 		pass
@@ -113,5 +132,5 @@ class cmb(object):
 
 if __name__ == "__main__":
 	c = cmb()
-	print c.spline([0.,1.], [0.,0.], 1., -1.)
+	print c.jlgen(1500, 3000)
 
