@@ -14,6 +14,7 @@ class cmb(object):
 		self.lmoin = 1500
 		self.akmax0 = 3000
 		self.l0max = 5300 # Use the same value as in cmbfast.inc
+
 		
 		
 	def __setattr__(self, name, value):
@@ -34,7 +35,7 @@ class cmb(object):
 	def _gen_fortran_block_(self, fmt, v):
 		""" A helper function to generate a fortran block when writing to file.
 		"""
-		header = pack("q", calcsize(fmt))
+		header = pack("P", calcsize(fmt))
 		return header + pack(fmt, v) + header
 	
 	def jlgen(self, lmoin ,kmax0, filename=False):
@@ -45,6 +46,13 @@ class cmb(object):
 			f = open(filename, "wb")
 		else: # Use auto filename
 			f = open("jl%dx%d.dat" % (lmoin, kmax0), "wb")
+		
+		# Write lmo ( = lmoin + 300 )
+		f.write(self._gen_fortran_block_("L", lmoin + 300))
+		# write kmax0
+		f.write(self._gen_fortran_block_("L", kmax0))
+
+		f.close()
 		
 	
 	# The subroutines.F functions and subroutines. 
