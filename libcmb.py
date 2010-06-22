@@ -4,7 +4,7 @@ from ctypes import *
 from struct import *
 
 
-class cmb(object):
+class CMB(object):
 	def __init__(self, libcmb="./libcmb.so.1.0", libjlgen="./libjlgen.so.1.0"):
 		self.libcmb = cdll.LoadLibrary(libcmb)
 		self.libjlgen = cdll.LoadLibrary(libjlgen)
@@ -139,6 +139,6 @@ class cmb(object):
 	
 
 if __name__ == "__main__":
-	c = cmb()
-	print c.jlgen(1500, 3000)
+	cmb = CMB()
+	print cmb.jlgen(1500, 3000)
 
