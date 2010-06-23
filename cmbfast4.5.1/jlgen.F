@@ -112,6 +112,75 @@ cxxx          end if
 
 ccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
 
+c Subroutine version of the main jlgen program.
+        subroutine(lmoin,kmax0,filename)
+      include 'cmbfast.inc'
+
+      parameter (xlimmin=10.0)
+      real x,ajl
+      integer l(lmax),i,j,lmo
+      character*500 filename,arg
+      common /lvalues1/ l,l0,lmo
+      save /lvalues1/
+
+      kmax=kmax0-25+151
+
+c For lensing the spectrum we need some extra ls. So even
+c if the user askes for lmo we will calculate to lmo+300
+
+       if ((lmoin+300).gt.l0max) then
+          stop
+       end if
+       call initlval(lmoin)
+
+        open(unit=9,file=filename
+     <,status='unknown',form='unformatted')
+        rewind 9
+        write(9)lmo
+        write(9)kmax0
+
+c     For safety purposes check. We will use this to
+c     check if the lvalues are the same in file and code.
+        write(9)l0
+        do j=1,l0
+           write(9)l(j)
+        end do
+
+       do 30 j=1,l0
+        do 40 i=1,kmax
+           if (i.le.151) then
+           if (i.le.51) then
+              x=(i-1)/10.0
+              else
+              x=(i-51)/5.0+5.0
+           end if
+           else
+              x=(i-151)+25.0
+           end if
+         xlim=l(j)/20.0
+         xlim=max(xlim,xlimmin)
+         xlim=l(j)-xlim
+         if (x-xlim.gt.1E-10) then
+          call bjl(l(j),x,ajl)
+cxxx          if ((l(j).eq.3).and.(x.le.0.2)) then
+cxxx             ajl=0.0
+cxxx          end if
+cxxx          if ((l(j).gt.3).and.(x.lt.0.6)) then
+cxxx             ajl=0.0
+cxxx          end if
+cxxx          if ((l(j).ge.5).and.(x.lt.1.0)) then
+cxxx             ajl=0.0
+cxxx          end if
+          write(9)ajl
+         endif
+ 40     continue
+30     continue
+       stop
+       end
+
+
+
+
         subroutine initlval(lmoin)
 
 c This subroutines initializes l arrays.

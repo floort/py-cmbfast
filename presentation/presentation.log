@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (PuffTeX-2009) (format=pdflatex 2010.6.20)  22 JUN 2010 13:20
+This is pdfTeX, Version 3.1415926-1.40.10 (PuffTeX-2009) (format=pdflatex 2010.5.29)  23 JUN 2010 18:00
 entering extended mode
  %&-line parsing enabled.
 **presentation.tex
@@ -815,32 +815,50 @@ File: umsb.fd 2009/06/22 v3.00 AMS symbols B
 File: WMAP.png Graphic file (type png)
  <use WMAP.png> [3
 
- <./WMAP.png>] [4
+ <./WMAP.png>]
+<wmap_powerspectrum.png, id=104, 1027.84pt x 731.73375pt>
+File: wmap_powerspectrum.png Graphic file (type png)
 
-]
+<use wmap_powerspectrum.png> [4
+
+ <./wmap_powerspectrum.png (PNG copy)>]
+Overfull \vbox (0.45007pt too high) detected at line 72
+ []
+
 [5
 
-] <punch_card.jpg, id=155, 803.0pt x 385.44pt>
+]
+\openout3 = `presentation.vrb'.
+
+ (./presentation.vrb
+Overfull \hbox (22.46126pt too wide) in paragraph at lines 6--6
+[]\OT1/cmtt/m/n/6 =============== CMBFAST Processing =============== 
+ []
+
+<cmbfast_plot.png, id=167, 642.4pt x 481.8pt>
+File: cmbfast_plot.png Graphic file (type png)
+ <use cmbfast_plot.png>) [6
+
+ <./cmbfast_plot.png (PNG copy)>] [7
+
+] <punch_card.jpg, id=223, 385.44pt x 803.0pt>
 File: punch_card.jpg Graphic file (type jpg)
- <use punch_card.jpg> [6
 
- <./punch_card.jpg>] [7
+<use punch_card.jpg> [8
 
-] <sample.pdf, id=208, 597.23125pt x 845.1575pt>
-File: sample.pdf Graphic file (type pdf)
+ <./punch_card.jpg>]
+\openout3 = `presentation.vrb'.
 
-<use sample.pdf>
-Overfull \hbox (276.83453pt too wide) in paragraph at lines 87--87
- [] 
- []
+ (./presentation.vrb) [9
 
+] [10
 
-Overfull \vbox (666.84897pt too high) detected at line 87
- []
+]
+<question.png, id=302, 865.73438pt x 737.75626pt>
+File: question.png Graphic file (type png)
+ <use question.png> [11
 
-[8
-
- <./sample.pdf>]
+ <./question.png (PNG copy)>]
 \tf@nav=\write5
 \openout5 = `presentation.nav'.
 
@@ -857,26 +875,25 @@ LaTeX Font Warning: Size substitutions with differences
 
  ) 
 Here is how much of TeX's memory you used:
- 12725 strings out of 493848
- 228168 string characters out of 3151833
- 306216 words of memory out of 3000000
- 15639 multiletter control sequences out of 15000+200000
- 11865 words of font info for 44 fonts, out of 3000000 for 9000
+ 12753 strings out of 493848
+ 228445 string characters out of 3151833
+ 318216 words of memory out of 3000000
+ 15654 multiletter control sequences out of 15000+200000
+ 11207 words of font info for 42 fonts, out of 3000000 for 9000
  714 hyphenation exceptions out of 8191
- 45i,15n,57p,341b,537s stack positions out of 5000i,500n,10000p,200000b,50000s
-</usr/local/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmitt10.pfb></usr
-/local/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/s
-hare/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/share/texm
-f-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></usr/local/share/texmf-dist/f
-onts/type1/public/amsfonts/cm/cmss12.pfb></usr/local/share/texmf-dist/fonts/typ
-e1/public/amsfonts/cm/cmss8.pfb></usr/local/share/texmf-dist/fonts/type1/public
-/amsfonts/cm/cmss9.pfb></usr/local/share/texmf-dist/fonts/type1/public/amsfonts
-/cm/cmssi10.pfb></usr/local/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmt
-t10.pfb></usr/local/share/texmf-dist/fonts/type1/public/amsfonts/symbols/msam7.
-pfb>
-Output written on presentation.pdf (8 pages, 880581 bytes).
+ 45i,15n,57p,341b,661s stack positions out of 5000i,500n,10000p,200000b,50000s
+</usr/local/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/
+local/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></usr/local/sh
+are/texmf-dist/fonts/type1/public/amsfonts/cm/cmss12.pfb></usr/local/share/texm
+f-dist/fonts/type1/public/amsfonts/cm/cmss8.pfb></usr/local/share/texmf-dist/fo
+nts/type1/public/amsfonts/cm/cmss9.pfb></usr/local/share/texmf-dist/fonts/type1
+/public/amsfonts/cm/cmssi10.pfb></usr/local/share/texmf-dist/fonts/type1/public
+/amsfonts/cm/cmsy8.pfb></usr/local/share/texmf-dist/fonts/type1/public/amsfonts
+/cm/cmtt10.pfb></usr/local/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt
+8.pfb>
+Output written on presentation.pdf (11 pages, 1680771 bytes).
 PDF statistics:
- 280 PDF objects out of 1000 (max. 8388607)
- 17 named destinations out of 1000 (max. 500000)
- 54 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 363 PDF objects out of 1000 (max. 8388607)
+ 23 named destinations out of 1000 (max. 500000)
+ 94 words of extra memory for PDF output out of 10000 (max. 10000000)
 
